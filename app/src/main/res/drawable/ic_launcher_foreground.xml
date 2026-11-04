@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Fondo azul -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
+    <!-- Símbolo del euro en blanco -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M67,36 C62,31 54,30 48,33 C42,36 38,43 37,51 L31,51 L31,57 L36.5,57 C36.4,58.5 36.4,60 36.5,61 L31,61 L31,67 L37,67 C38,75 42,82 48,85 C54,88 62,87 67,82 L62,75 C59,78 55,79 51,76 C48,74 46,71 45,67 L58,67 L58,61 L44.5,61 C44.4,60 44.4,58.5 44.5,57 L58,57 L58,51 L45,51 C46,47 48,44 51,42 C55,39 59,40 62,43 Z" />
+</vector>

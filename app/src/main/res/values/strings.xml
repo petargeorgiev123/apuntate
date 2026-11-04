@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Apuntate</string>
+
+    <!-- Pantalla de grupos -->
+    <string name="grupos_titulo">Mis grupos</string>
+    <string name="nuevo_grupo">Nuevo grupo</string>
+    <string name="sin_grupos">Todavía no tienes grupos.\n¡Crea uno para empezar a repartir gastos!</string>
+    <string name="crear_grupo">Crear grupo</string>
+    <string name="nombre_grupo_hint">Nombre del grupo (ej. Esquí Sierra Nevada)</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="guardar">Guardar</string>
+    <string name="añadir">Añadir</string>
+
+    <!-- Detalle del grupo -->
+    <string name="participantes">Participantes</string>
+    <string name="gastos">Gastos</string>
+    <string name="balance">Balance</string>
+    <string name="total_gastado">Total gastado</string>
+    <string name="nuevo_gasto">Nuevo gasto</string>
+    <string name="añadir_participante">Añadir participante</string>
+    <string name="nombre_participante_hint">Nombre de la persona</string>
+    <string name="sin_participantes">Añade participantes para poder registrar gastos.</string>
+    <string name="sin_gastos">Aún no hay gastos registrados.</string>
+
+    <!-- Gasto -->
+    <string name="concepto_hint">Concepto (ej. Coche, Comida, Hotel)</string>
+    <string name="importe_hint">Importe (€)</string>
+    <string name="pagado_por">Pagado por</string>
+    <string name="registrar_gasto">Registrar gasto</string>
+
+    <!-- Balance / liquidación -->
+    <string name="como_saldar">Cómo saldar cuentas</string>
+    <string name="todo_saldado">¡Todo está saldado! No hay deudas pendientes.</string>
+    <string name="por_persona">Coste por persona</string>
+</resources>
