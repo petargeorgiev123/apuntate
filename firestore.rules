@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Grupos: solo accesibles por usuarios autenticados.
+    match /grupos/{grupoId} {
+
+      // Ayudante: ¿el usuario actual es miembro del grupo?
+      function esMiembro() {
+        return request.auth != null
+          && request.auth.uid in resource.data.miembrosUids;
+      }
+
+      // Leer: solo los miembros del grupo.
+      allow read: if esMiembro();
+
+      // Crear: cualquier usuario autenticado, siempre que se incluya a sí mismo como miembro.
+      allow create: if request.auth != null
+        && request.auth.uid in request.resource.data.miembrosUids
+        && request.resource.data.creadoPor == request.auth.uid;
+
+      // Actualizar: debe ser miembro actual, o bien unirse por código
+      // (el documento resultante debe contener su uid en miembrosUids).
+      allow update: if request.auth != null
+        && (
+          request.auth.uid in resource.data.miembrosUids
+          || request.auth.uid in request.resource.data.miembrosUids
+        );
+
+      // Borrar: solo un miembro del grupo.
+      allow delete: if esMiembro();
+
+      // Subcolecciones (gastos y mensajes): solo miembros del grupo padre.
+      function esMiembroDelGrupoPadre() {
+        return request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/grupos/$(grupoId)).data.miembrosUids;
+      }
+
+      match /gastos/{gastoId} {
+        allow read, write: if esMiembroDelGrupoPadre();
+      }
+
+      match /mensajes/{mensajeId} {
+        allow read: if esMiembroDelGrupoPadre();
+        // Crear mensaje: debe ser miembro y el autor debe ser él mismo.
+        allow create: if esMiembroDelGrupoPadre()
+          && request.resource.data.autorUid == request.auth.uid;
+        // Los mensajes no se editan; borrar solo el propio autor.
+        allow delete: if request.auth != null
+          && resource.data.autorUid == request.auth.uid;
+      }
+    }
+  }
+}

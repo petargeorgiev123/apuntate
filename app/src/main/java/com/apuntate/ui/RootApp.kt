@@ -7,26 +7,28 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apuntate.auth.AuthRepository
 import com.apuntate.auth.AuthScreen
 import com.apuntate.auth.AuthViewModel
-import com.apuntate.data.ApuntateRepository
+import com.apuntate.cloud.CloudRepository
 
 /**
- * Punto de entrada de la UI. Decide, según el estado de sesión de Firebase,
- * si mostrar la pantalla de login o la aplicación principal.
+ * Punto de entrada de la UI. Según el estado de sesión de Firebase, muestra el login
+ * o la aplicación principal (versión en la nube con grupos compartidos y chat).
  */
 @Composable
 fun RootApp(
-    repo: ApuntateRepository,
-    authRepo: AuthRepository
+    authRepo: AuthRepository,
+    cloudRepo: CloudRepository
 ) {
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authRepo))
     val usuario by authViewModel.usuario.collectAsState()
 
-    if (usuario == null) {
+    val u = usuario
+    if (u == null) {
         AuthScreen(viewModel = authViewModel)
     } else {
         ApuntateApp(
-            repo = repo,
-            nombreUsuario = usuario?.nombre ?: usuario?.email ?: "",
+            cloudRepo = cloudRepo,
+            uid = u.uid,
+            nombreUsuario = u.nombre ?: u.email ?: "Usuario",
             onCerrarSesion = { authViewModel.cerrarSesion() }
         )
     }
