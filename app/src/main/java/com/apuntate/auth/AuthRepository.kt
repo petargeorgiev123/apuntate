@@ -41,6 +41,8 @@ class AuthRepository(
                 .setDisplayName(nombre.trim())
                 .build()
             user.updateProfile(cambios).await()
+            // Recargamos para que el nombre quede disponible de inmediato.
+            user.reload().await()
         }
     }
 

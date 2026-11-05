@@ -135,6 +135,37 @@ class CloudRepository(
         grupos.document(grupoId).collection("gastos").document(gastoId).delete().await()
     }
 
+    /**
+     * Sincroniza el nombre del usuario en este grupo con su nombre actual de perfil.
+     * Corrige casos antiguos en los que se guardó el email en lugar del nombre:
+     *  - Actualiza su entrada en el mapa de miembros.
+     *  - Actualiza el nombre del pagador en sus gastos ya registrados.
+     * Solo escribe si detecta que el nombre guardado es distinto del actual.
+     */
+    suspend fun sincronizarMiNombre(grupoId: String, uid: String, nombreActual: String) {
+        if (nombreActual.isBlank()) return
+        val ref = grupos.document(grupoId)
+        val snap = ref.get().await()
+        val grupo = snap.toObject(GrupoCloud::class.java) ?: return
+
+        val nombreGuardado = grupo.miembros[uid]
+        if (nombreGuardado == nombreActual) return // ya está correcto, no hacemos nada
+
+        // 1) Actualizar el nombre del miembro en el grupo.
+        ref.update("miembros.$uid", nombreActual).await()
+
+        // 2) Actualizar el nombre del pagador en sus gastos antiguos.
+        val gastosDelUsuario = ref.collection("gastos")
+            .whereEqualTo("pagadoPorUid", uid)
+            .get()
+            .await()
+        for (gasto in gastosDelUsuario.documents) {
+            if (gasto.getString("pagadoPorNombre") != nombreActual) {
+                gasto.reference.update("pagadoPorNombre", nombreActual).await()
+            }
+        }
+    }
+
     // ---------------- Chat ----------------
 
     fun observarMensajes(grupoId: String): Flow<List<MensajeCloud>> = callbackFlow {

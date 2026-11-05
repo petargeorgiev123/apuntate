@@ -55,10 +55,21 @@ fun RootApp(
             authRepo = authRepo,
             cloudRepo = cloudRepo,
             uid = u.uid,
-            nombreUsuario = u.nombre ?: u.email ?: "Usuario",
+            nombreUsuario = nombreVisible(u.nombre, u.email),
             email = u.email ?: "",
             observer = observer,
             onCerrarSesion = { authViewModel.cerrarSesion() }
         )
     }
+}
+
+/**
+ * Nombre a mostrar para el usuario. Preferimos el nombre del perfil.
+ * Como respaldo (si el nombre aún no está disponible), usamos la parte del email
+ * antes de la @, nunca el email completo.
+ */
+private fun nombreVisible(nombre: String?, email: String?): String {
+    if (!nombre.isNullOrBlank()) return nombre
+    val local = email?.substringBefore("@")?.trim()
+    return if (!local.isNullOrBlank()) local else "Usuario"
 }

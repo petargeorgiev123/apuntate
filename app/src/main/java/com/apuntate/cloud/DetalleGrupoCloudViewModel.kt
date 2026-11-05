@@ -38,6 +38,17 @@ class DetalleGrupoCloudViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DetalleGrupoCloudUiState())
 
+    init {
+        // Al abrir el grupo, corrige el nombre guardado (p. ej. si antes quedó el email).
+        viewModelScope.launch {
+            try {
+                repo.sincronizarMiNombre(grupoId, uid, nombreUsuario)
+            } catch (_: Exception) {
+                // Silencioso: si falla (p. ej. sin conexión), no bloquea la pantalla.
+            }
+        }
+    }
+
     fun añadirGasto(concepto: String, importeCentimos: Long, pagadoPorUid: String, pagadoPorNombre: String) {
         if (concepto.isBlank() || importeCentimos <= 0) return
         viewModelScope.launch {
