@@ -93,6 +93,10 @@
     <string name="perfil_idioma_en">Английски</string>
     <string name="perfil_idioma_bg">Български</string>
     <string name="perfil_email_etiqueta">Влязъл като %1$s</string>
+    <string name="perfil_foto">Профилна снимка</string>
+    <string name="perfil_cambiar_foto">Смени снимката</string>
+    <string name="perfil_quitar_foto">Премахни снимката</string>
+    <string name="perfil_foto_local">Снимката се запазва само на това устройство.</string>
 
     <!-- Известия -->
     <string name="notif_canal_nombre">Чат съобщения</string>

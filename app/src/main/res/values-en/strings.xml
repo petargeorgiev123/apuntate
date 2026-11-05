@@ -93,6 +93,10 @@
     <string name="perfil_idioma_en">English</string>
     <string name="perfil_idioma_bg">Bulgarian</string>
     <string name="perfil_email_etiqueta">Signed in as %1$s</string>
+    <string name="perfil_foto">Profile photo</string>
+    <string name="perfil_cambiar_foto">Change photo</string>
+    <string name="perfil_quitar_foto">Remove photo</string>
+    <string name="perfil_foto_local">The photo is saved only on this device.</string>
 
     <!-- Notifications -->
     <string name="notif_canal_nombre">Chat messages</string>

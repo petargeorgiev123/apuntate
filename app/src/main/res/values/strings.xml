@@ -93,6 +93,10 @@
     <string name="perfil_idioma_en">Inglés</string>
     <string name="perfil_idioma_bg">Búlgaro</string>
     <string name="perfil_email_etiqueta">Sesión iniciada como %1$s</string>
+    <string name="perfil_foto">Foto de perfil</string>
+    <string name="perfil_cambiar_foto">Cambiar foto</string>
+    <string name="perfil_quitar_foto">Quitar foto</string>
+    <string name="perfil_foto_local">La foto se guarda solo en este dispositivo.</string>
 
     <!-- Notificaciones -->
     <string name="notif_canal_nombre">Mensajes de chat</string>
