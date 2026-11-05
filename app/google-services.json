@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "68533522891",
+    "project_id": "apuntate-1cd68",
+    "storage_bucket": "apuntate-1cd68.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68533522891:android:eed704d09c73320af0264e",
+        "android_client_info": {
+          "package_name": "com.apuntate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkebDcSb-qMApmphIIfV7H2oO80eFJXjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

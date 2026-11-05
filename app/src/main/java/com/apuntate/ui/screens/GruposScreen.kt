@@ -9,11 +9,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -43,15 +48,48 @@ import com.apuntate.ui.GruposViewModel
 @Composable
 fun GruposScreen(
     viewModel: GruposViewModel,
+    nombreUsuario: String,
+    onCerrarSesion: () -> Unit,
     onAbrirGrupo: (Long) -> Unit
 ) {
     val grupos by viewModel.grupos.collectAsState()
     var mostrarDialogo by remember { mutableStateOf(false) }
+    var menuUsuario by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.grupos_titulo)) },
+                actions = {
+                    IconButton(onClick = { menuUsuario = true }) {
+                        Icon(
+                            Icons.Default.AccountCircle,
+                            contentDescription = "Cuenta",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuUsuario,
+                        onDismissRequest = { menuUsuario = false }
+                    ) {
+                        if (nombreUsuario.isNotBlank()) {
+                            DropdownMenuItem(
+                                text = { Text(nombreUsuario, style = MaterialTheme.typography.labelLarge) },
+                                onClick = {},
+                                enabled = false
+                            )
+                            HorizontalDivider()
+                        }
+                        DropdownMenuItem(
+                            text = { Text("Cerrar sesión") },
+                            leadingIcon = { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null) },
+                            onClick = {
+                                menuUsuario = false
+                                onCerrarSesion()
+                            }
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary

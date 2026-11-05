@@ -18,7 +18,11 @@ object Rutas {
 }
 
 @Composable
-fun ApuntateApp(repo: ApuntateRepository) {
+fun ApuntateApp(
+    repo: ApuntateRepository,
+    nombreUsuario: String,
+    onCerrarSesion: () -> Unit
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Rutas.GRUPOS) {
@@ -26,6 +30,8 @@ fun ApuntateApp(repo: ApuntateRepository) {
             val vm: GruposViewModel = viewModel(factory = GruposViewModel.Factory(repo))
             GruposScreen(
                 viewModel = vm,
+                nombreUsuario = nombreUsuario,
+                onCerrarSesion = onCerrarSesion,
                 onAbrirGrupo = { grupoId -> navController.navigate(Rutas.detalle(grupoId)) }
             )
         }
