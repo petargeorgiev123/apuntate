@@ -32,8 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.apuntate.R
 import com.apuntate.cloud.MensajeCloud
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -56,7 +58,7 @@ fun ChatTab(
         if (mensajes.isEmpty()) {
             Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Text(
-                    "No hay mensajes todavía.\n¡Escribe el primero para coordinar el plan!",
+                    stringResource(R.string.chat_vacio),
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
@@ -82,7 +84,7 @@ fun ChatTab(
                     value = texto,
                     onValueChange = { texto = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Escribe un mensaje…") },
+                    placeholder = { Text(stringResource(R.string.chat_placeholder)) },
                     maxLines = 4
                 )
                 IconButton(
@@ -93,7 +95,7 @@ fun ChatTab(
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.Send,
-                        "Enviar",
+                        stringResource(R.string.chat_enviar),
                         tint = if (texto.isNotBlank()) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurfaceVariant
                     )

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Apuntate" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Base AppCompat (requerido por AppCompatActivity). La UI real la define Compose (Material 3). -->
+    <style name="Theme.Apuntate" parent="Theme.AppCompat.DayNight.NoActionBar" />
 </resources>

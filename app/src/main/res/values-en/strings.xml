@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Apuntate</string>
+
+    <!-- Login / register -->
+    <string name="auth_subtitulo_registro">Create your account</string>
+    <string name="auth_subtitulo_login">Sign in</string>
+    <string name="auth_nombre">Name</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_mostrar_password">Show password</string>
+    <string name="auth_ocultar_password">Hide password</string>
+    <string name="auth_olvido_password">Forgot your password?</string>
+    <string name="auth_registrarse">Sign up</string>
+    <string name="auth_entrar">Log in</string>
+    <string name="auth_cambiar_a_login">Already have an account? Sign in</string>
+    <string name="auth_cambiar_a_registro">No account yet? Sign up</string>
+    <string name="auth_error_registro">Fill in your name, email and a password of at least 6 characters.</string>
+    <string name="auth_error_login">Enter a valid email and your password.</string>
+    <string name="auth_error_email_reset">Enter your email to reset your password.</string>
+    <string name="auth_reset_enviado">We\'ve sent you an email to reset your password.</string>
+    <string name="auth_err_credenciales">Incorrect email or password.</string>
+    <string name="auth_err_no_existe">There is no account with that email.</string>
+    <string name="auth_err_email_en_uso">An account with that email already exists.</string>
+    <string name="auth_err_email_formato">The email format is not valid.</string>
+    <string name="auth_err_red">Connection error. Check your internet.</string>
+    <string name="auth_err_generico">The operation could not be completed. Please try again.</string>
+    <string name="auth_err_nombre">Enter a valid name.</string>
+
+    <!-- Groups list -->
+    <string name="grupos_titulo">My groups</string>
+    <string name="cuenta">Account</string>
+    <string name="cerrar_sesion">Log out</string>
+    <string name="mi_perfil">My profile</string>
+    <string name="nuevo_grupo">New group</string>
+    <string name="unirse_con_codigo">Join with code</string>
+    <string name="unirse_a_grupo">Join a group</string>
+    <string name="codigo_invitacion">Invitation code</string>
+    <string name="sin_grupos">You don\'t have any groups yet.\nCreate a new one or join with an invitation code.</string>
+    <string name="nombre_grupo_hint">Group name (e.g. Ski trip)</string>
+    <string name="miembro_singular">%1$d member</string>
+    <string name="miembros_plural">%1$d members</string>
+    <string name="unido_ok">You\'ve joined the group!</string>
+    <string name="codigo_no_existe">There is no group with that code.</string>
+    <string name="error_crear_grupo">Couldn\'t create the group. Check your connection.</string>
+    <string name="error_unirse_grupo">Couldn\'t join the group. Check your connection.</string>
+
+    <!-- Common -->
+    <string name="aceptar">OK</string>
+    <string name="cancelar">Cancel</string>
+    <string name="guardar">Save</string>
+    <string name="eliminar">Delete</string>
+
+    <!-- Group detail -->
+    <string name="tab_grupo">Group</string>
+    <string name="tab_gastos">Expenses</string>
+    <string name="tab_balance">Balance</string>
+    <string name="tab_chat">Chat</string>
+    <string name="compartir_codigo">Share code</string>
+    <string name="compartir_mensaje">Join our group \"%1$s\" on Apuntate! Use the invitation code: %2$s</string>
+    <string name="salir_grupo">Leave group</string>
+    <string name="salir_grupo_confirmar">Are you sure you want to leave this group? If you are the only member, the group will be deleted.</string>
+    <string name="salir">Leave</string>
+    <string name="codigo_ayuda">Share this code (share button above) so other people can join the group.</string>
+    <string name="miembros_contador">Members (%1$d)</string>
+
+    <!-- Expenses -->
+    <string name="nuevo_gasto">New expense</string>
+    <string name="sin_gastos">No expenses yet. Tap «New expense» to add the first one.</string>
+    <string name="pagado_por_etiqueta">Paid by: %1$s</string>
+    <string name="concepto_hint">Description (e.g. Car, Lunch, Hotel)</string>
+    <string name="importe_hint">Amount (€)</string>
+    <string name="pagado_por">Paid by</string>
+    <string name="registrar_gasto">Add expense</string>
+
+    <!-- Balance -->
+    <string name="total_gastado">Total spent</string>
+    <string name="por_persona_etiqueta">Cost per person: %1$s</string>
+    <string name="como_saldar">How to settle up</string>
+    <string name="todo_saldado">Everything is settled! No outstanding debts.</string>
+
+    <!-- Chat -->
+    <string name="chat_vacio">No messages yet.\nWrite the first one to plan together!</string>
+    <string name="chat_placeholder">Type a message…</string>
+    <string name="chat_enviar">Send</string>
+
+    <!-- Profile -->
+    <string name="perfil_titulo">My profile</string>
+    <string name="perfil_nombre">Name</string>
+    <string name="perfil_guardar_nombre">Save name</string>
+    <string name="perfil_nombre_guardado">Name updated.</string>
+    <string name="perfil_idioma">Language</string>
+    <string name="perfil_idioma_es">Spanish</string>
+    <string name="perfil_idioma_en">English</string>
+    <string name="perfil_idioma_bg">Bulgarian</string>
+    <string name="perfil_email_etiqueta">Signed in as %1$s</string>
+
+    <!-- Notifications -->
+    <string name="notif_canal_nombre">Chat messages</string>
+    <string name="notif_canal_desc">Alerts for new messages in your groups</string>
+    <string name="notif_nuevo_mensaje_en">New message in %1$s</string>
+</resources>

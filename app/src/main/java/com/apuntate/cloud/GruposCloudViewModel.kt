@@ -10,6 +10,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/** Resultado de una acción que la UI traduce a texto según el idioma. */
+enum class ResultadoGrupo {
+    UNIDO_OK,
+    CODIGO_NO_EXISTE,
+    ERROR_CREAR,
+    ERROR_UNIRSE
+}
+
 class GruposCloudViewModel(
     private val repo: CloudRepository,
     private val uid: String,
@@ -20,10 +28,10 @@ class GruposCloudViewModel(
         repo.observarMisGrupos(uid)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _mensaje = MutableStateFlow<String?>(null)
-    val mensaje: StateFlow<String?> = _mensaje.asStateFlow()
+    private val _resultado = MutableStateFlow<ResultadoGrupo?>(null)
+    val resultado: StateFlow<ResultadoGrupo?> = _resultado.asStateFlow()
 
-    fun limpiarMensaje() { _mensaje.value = null }
+    fun limpiarResultado() { _resultado.value = null }
 
     fun crearGrupo(nombre: String) {
         if (nombre.isBlank()) return
@@ -31,7 +39,7 @@ class GruposCloudViewModel(
             try {
                 repo.crearGrupo(nombre, uid, nombreUsuario)
             } catch (e: Exception) {
-                _mensaje.value = "No se pudo crear el grupo. Revisa tu conexión."
+                _resultado.value = ResultadoGrupo.ERROR_CREAR
             }
         }
     }
@@ -41,10 +49,10 @@ class GruposCloudViewModel(
         viewModelScope.launch {
             try {
                 val id = repo.unirseConCodigo(codigo, uid, nombreUsuario)
-                _mensaje.value = if (id != null) "¡Te has unido al grupo!"
-                else "No existe ningún grupo con ese código."
+                _resultado.value =
+                    if (id != null) ResultadoGrupo.UNIDO_OK else ResultadoGrupo.CODIGO_NO_EXISTE
             } catch (e: Exception) {
-                _mensaje.value = "No se pudo unir al grupo. Revisa tu conexión."
+                _resultado.value = ResultadoGrupo.ERROR_UNIRSE
             }
         }
     }

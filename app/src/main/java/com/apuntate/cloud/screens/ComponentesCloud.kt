@@ -12,7 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import com.apuntate.R
 
 /** Diálogo genérico con un único campo de texto, reutilizado por las pantallas cloud. */
 @Composable
@@ -43,9 +45,9 @@ fun DialogoTextoSimple(
         },
         confirmButton = {
             TextButton(onClick = { if (texto.isNotBlank()) onConfirmar(texto) }, enabled = texto.isNotBlank()) {
-                Text("Aceptar")
+                Text(stringResource(R.string.aceptar))
             }
         },
-        dismissButton = { TextButton(onClick = onCancelar) { Text("Cancelar") } }
+        dismissButton = { TextButton(onClick = onCancelar) { Text(stringResource(R.string.cancelar)) } }
     )
 }

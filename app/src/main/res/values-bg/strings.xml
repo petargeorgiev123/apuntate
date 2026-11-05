@@ -1,0 +1,101 @@
+<resources>
+    <string name="app_name">Apuntate</string>
+
+    <!-- Вход / регистрация -->
+    <string name="auth_subtitulo_registro">Създай профил</string>
+    <string name="auth_subtitulo_login">Вход</string>
+    <string name="auth_nombre">Име</string>
+    <string name="auth_email">Имейл</string>
+    <string name="auth_password">Парола</string>
+    <string name="auth_mostrar_password">Покажи паролата</string>
+    <string name="auth_ocultar_password">Скрий паролата</string>
+    <string name="auth_olvido_password">Забравена парола?</string>
+    <string name="auth_registrarse">Регистрация</string>
+    <string name="auth_entrar">Вход</string>
+    <string name="auth_cambiar_a_login">Вече имаш профил? Влез</string>
+    <string name="auth_cambiar_a_registro">Нямаш профил? Регистрирай се</string>
+    <string name="auth_error_registro">Попълни име, имейл и парола с поне 6 знака.</string>
+    <string name="auth_error_login">Въведи валиден имейл и паролата си.</string>
+    <string name="auth_error_email_reset">Въведи имейла си, за да възстановиш паролата.</string>
+    <string name="auth_reset_enviado">Изпратихме ти имейл за възстановяване на паролата.</string>
+    <string name="auth_err_credenciales">Грешен имейл или парола.</string>
+    <string name="auth_err_no_existe">Няма профил с този имейл.</string>
+    <string name="auth_err_email_en_uso">Вече съществува профил с този имейл.</string>
+    <string name="auth_err_email_formato">Форматът на имейла не е валиден.</string>
+    <string name="auth_err_red">Грешка във връзката. Провери интернета си.</string>
+    <string name="auth_err_generico">Операцията не можа да бъде завършена. Опитай отново.</string>
+    <string name="auth_err_nombre">Въведи валидно име.</string>
+
+    <!-- Списък с групи -->
+    <string name="grupos_titulo">Моите групи</string>
+    <string name="cuenta">Профил</string>
+    <string name="cerrar_sesion">Изход</string>
+    <string name="mi_perfil">Моят профил</string>
+    <string name="nuevo_grupo">Нова група</string>
+    <string name="unirse_con_codigo">Присъедини се с код</string>
+    <string name="unirse_a_grupo">Присъедини се към група</string>
+    <string name="codigo_invitacion">Код за покана</string>
+    <string name="sin_grupos">Все още нямаш групи.\nСъздай нова или се присъедини с код за покана.</string>
+    <string name="nombre_grupo_hint">Име на групата (напр. Ски пътуване)</string>
+    <string name="miembro_singular">%1$d участник</string>
+    <string name="miembros_plural">%1$d участници</string>
+    <string name="unido_ok">Присъедини се към групата!</string>
+    <string name="codigo_no_existe">Няма група с този код.</string>
+    <string name="error_crear_grupo">Групата не можа да се създаде. Провери връзката си.</string>
+    <string name="error_unirse_grupo">Неуспешно присъединяване към групата. Провери връзката си.</string>
+
+    <!-- Общи -->
+    <string name="aceptar">ОК</string>
+    <string name="cancelar">Отказ</string>
+    <string name="guardar">Запази</string>
+    <string name="eliminar">Изтрий</string>
+
+    <!-- Детайли за групата -->
+    <string name="tab_grupo">Група</string>
+    <string name="tab_gastos">Разходи</string>
+    <string name="tab_balance">Баланс</string>
+    <string name="tab_chat">Чат</string>
+    <string name="compartir_codigo">Сподели кода</string>
+    <string name="compartir_mensaje">Присъедини се към групата ни \"%1$s\" в Apuntate! Използвай кода за покана: %2$s</string>
+    <string name="salir_grupo">Напусни групата</string>
+    <string name="salir_grupo_confirmar">Сигурен ли си, че искаш да напуснеш тази група? Ако си единственият участник, групата ще бъде изтрита.</string>
+    <string name="salir">Напусни</string>
+    <string name="codigo_ayuda">Сподели този код (бутонът за споделяне горе), за да могат други хора да се присъединят към групата.</string>
+    <string name="miembros_contador">Участници (%1$d)</string>
+
+    <!-- Разходи -->
+    <string name="nuevo_gasto">Нов разход</string>
+    <string name="sin_gastos">Все още няма разходи. Натисни «Нов разход», за да добавиш първия.</string>
+    <string name="pagado_por_etiqueta">Платено от: %1$s</string>
+    <string name="concepto_hint">Описание (напр. Кола, Обяд, Хотел)</string>
+    <string name="importe_hint">Сума (€)</string>
+    <string name="pagado_por">Платено от</string>
+    <string name="registrar_gasto">Добави разход</string>
+
+    <!-- Баланс -->
+    <string name="total_gastado">Общо похарчено</string>
+    <string name="por_persona_etiqueta">Разход на човек: %1$s</string>
+    <string name="como_saldar">Как да уредите сметките</string>
+    <string name="todo_saldado">Всичко е уредено! Няма неплатени задължения.</string>
+
+    <!-- Чат -->
+    <string name="chat_vacio">Все още няма съобщения.\nНапиши първото, за да планирате заедно!</string>
+    <string name="chat_placeholder">Напиши съобщение…</string>
+    <string name="chat_enviar">Изпрати</string>
+
+    <!-- Профил -->
+    <string name="perfil_titulo">Моят профил</string>
+    <string name="perfil_nombre">Име</string>
+    <string name="perfil_guardar_nombre">Запази името</string>
+    <string name="perfil_nombre_guardado">Името е обновено.</string>
+    <string name="perfil_idioma">Език</string>
+    <string name="perfil_idioma_es">Испански</string>
+    <string name="perfil_idioma_en">Английски</string>
+    <string name="perfil_idioma_bg">Български</string>
+    <string name="perfil_email_etiqueta">Влязъл като %1$s</string>
+
+    <!-- Известия -->
+    <string name="notif_canal_nombre">Чат съобщения</string>
+    <string name="notif_canal_desc">Известия за нови съобщения в твоите групи</string>
+    <string name="notif_nuevo_mensaje_en">Ново съобщение в %1$s</string>
+</resources>

@@ -19,9 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.apuntate.R
 import com.apuntate.ui.Moneda
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,13 +44,13 @@ fun DialogoGastoCloud(
 
     AlertDialog(
         onDismissRequest = onCancelar,
-        title = { Text("Nuevo gasto") },
+        title = { Text(stringResource(R.string.nuevo_gasto)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = concepto,
                     onValueChange = { concepto = it },
-                    label = { Text("Concepto (ej. Coche, Comida, Hotel)") },
+                    label = { Text(stringResource(R.string.concepto_hint)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     modifier = Modifier.fillMaxWidth()
@@ -56,7 +58,7 @@ fun DialogoGastoCloud(
                 OutlinedTextField(
                     value = importe,
                     onValueChange = { importe = it },
-                    label = { Text("Importe (€)") },
+                    label = { Text(stringResource(R.string.importe_hint)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
@@ -70,7 +72,7 @@ fun DialogoGastoCloud(
                         value = seleccionado?.value ?: "",
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Pagado por") },
+                        label = { Text(stringResource(R.string.pagado_por)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = menuAbierto) },
                         modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable)
                     )
@@ -92,8 +94,8 @@ fun DialogoGastoCloud(
                     if (valido && c != null && m != null) onConfirmar(concepto, c, m.key, m.value)
                 },
                 enabled = valido
-            ) { Text("Registrar gasto") }
+            ) { Text(stringResource(R.string.registrar_gasto)) }
         },
-        dismissButton = { TextButton(onClick = onCancelar) { Text("Cancelar") } }
+        dismissButton = { TextButton(onClick = onCancelar) { Text(stringResource(R.string.cancelar)) } }
     )
 }

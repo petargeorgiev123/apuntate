@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.GroupAdd
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -41,12 +41,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.apuntate.R
 import com.apuntate.cloud.GrupoCloud
 import com.apuntate.cloud.GruposCloudViewModel
 
@@ -56,31 +57,41 @@ fun GruposCloudScreen(
     viewModel: GruposCloudViewModel,
     nombreUsuario: String,
     onCerrarSesion: () -> Unit,
+    onAbrirPerfil: () -> Unit,
     onAbrirGrupo: (String) -> Unit
 ) {
     val grupos by viewModel.grupos.collectAsState()
-    val mensaje by viewModel.mensaje.collectAsState()
+    val resultado by viewModel.resultado.collectAsState()
     var menuUsuario by remember { mutableStateOf(false) }
     var dialogoCrear by remember { mutableStateOf(false) }
     var dialogoUnirse by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(mensaje) {
-        mensaje?.let {
-            snackbar.showSnackbar(it)
-            viewModel.limpiarMensaje()
+    val textoUnido = stringResource(R.string.unido_ok)
+    val textoCodigoNoExiste = stringResource(R.string.codigo_no_existe)
+    val textoErrorCrear = stringResource(R.string.error_crear_grupo)
+    val textoErrorUnirse = stringResource(R.string.error_unirse_grupo)
+
+    LaunchedEffect(resultado) {
+        val r = resultado ?: return@LaunchedEffect
+        val texto = when (r) {
+            com.apuntate.cloud.ResultadoGrupo.UNIDO_OK -> textoUnido
+            com.apuntate.cloud.ResultadoGrupo.CODIGO_NO_EXISTE -> textoCodigoNoExiste
+            com.apuntate.cloud.ResultadoGrupo.ERROR_CREAR -> textoErrorCrear
+            com.apuntate.cloud.ResultadoGrupo.ERROR_UNIRSE -> textoErrorUnirse
         }
+        snackbar.showSnackbar(texto)
+        viewModel.limpiarResultado()
     }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbar) },
         topBar = {
             TopAppBar(
-                title = { Text("Mis grupos") },
+                title = { Text(stringResource(R.string.grupos_titulo)) },
                 actions = {
                     IconButton(onClick = { menuUsuario = true }) {
-                        Icon(Icons.Default.AccountCircle, "Cuenta", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.AccountCircle, stringResource(R.string.cuenta), tint = MaterialTheme.colorScheme.onPrimary)
                     }
                     DropdownMenu(expanded = menuUsuario, onDismissRequest = { menuUsuario = false }) {
                         if (nombreUsuario.isNotBlank()) {
@@ -91,7 +102,12 @@ fun GruposCloudScreen(
                             HorizontalDivider()
                         }
                         DropdownMenuItem(
-                            text = { Text("Cerrar sesión") },
+                            text = { Text(stringResource(R.string.mi_perfil)) },
+                            leadingIcon = { Icon(Icons.Default.Person, null) },
+                            onClick = { menuUsuario = false; onAbrirPerfil() }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.cerrar_sesion)) },
                             leadingIcon = { Icon(Icons.AutoMirrored.Filled.Logout, null) },
                             onClick = { menuUsuario = false; onCerrarSesion() }
                         )
@@ -108,11 +124,11 @@ fun GruposCloudScreen(
                 FloatingActionButton(
                     onClick = { dialogoUnirse = true },
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
-                ) { Icon(Icons.Default.GroupAdd, "Unirse con código") }
+                ) { Icon(Icons.Default.GroupAdd, stringResource(R.string.unirse_con_codigo)) }
                 ExtendedFloatingActionButton(
                     onClick = { dialogoCrear = true },
                     icon = { Icon(Icons.Default.Add, null) },
-                    text = { Text("Nuevo grupo") }
+                    text = { Text(stringResource(R.string.nuevo_grupo)) }
                 )
             }
         }
@@ -125,7 +141,7 @@ fun GruposCloudScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(Icons.Default.Group, null, tint = MaterialTheme.colorScheme.primary)
                     Text(
-                        "Todavía no tienes grupos.\nCrea uno nuevo o únete con un código de invitación.",
+                        stringResource(R.string.sin_grupos),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = 16.dp)
@@ -147,16 +163,16 @@ fun GruposCloudScreen(
 
     if (dialogoCrear) {
         DialogoTextoSimple(
-            titulo = "Nuevo grupo",
-            etiqueta = "Nombre del grupo (ej. Esquí Sierra Nevada)",
+            titulo = stringResource(R.string.nuevo_grupo),
+            etiqueta = stringResource(R.string.nombre_grupo_hint),
             onConfirmar = { viewModel.crearGrupo(it); dialogoCrear = false },
             onCancelar = { dialogoCrear = false }
         )
     }
     if (dialogoUnirse) {
         DialogoTextoSimple(
-            titulo = "Unirse a un grupo",
-            etiqueta = "Código de invitación",
+            titulo = stringResource(R.string.unirse_a_grupo),
+            etiqueta = stringResource(R.string.codigo_invitacion),
             forzarMayusculas = true,
             onConfirmar = { viewModel.unirseConCodigo(it); dialogoUnirse = false },
             onCancelar = { dialogoUnirse = false }
@@ -167,12 +183,15 @@ fun GruposCloudScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GrupoCloudItem(grupo: GrupoCloud, onClick: () -> Unit) {
+    val n = grupo.miembrosUids.size
     Card(Modifier.fillMaxWidth()) {
         ListItem(
             headlineContent = { Text(grupo.nombre, style = MaterialTheme.typography.titleMedium) },
             supportingContent = {
-                val n = grupo.miembrosUids.size
-                Text("$n ${if (n == 1) "miembro" else "miembros"}")
+                Text(
+                    if (n == 1) stringResource(R.string.miembro_singular, n)
+                    else stringResource(R.string.miembros_plural, n)
+                )
             },
             leadingContent = { Icon(Icons.Default.Group, null) },
             trailingContent = { Icon(Icons.Default.ChevronRight, null) },

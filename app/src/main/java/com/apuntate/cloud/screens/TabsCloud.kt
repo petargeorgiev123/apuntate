@@ -25,9 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.apuntate.R
 import com.apuntate.cloud.DetalleGrupoCloudUiState
 import com.apuntate.ui.Moneda
 
@@ -47,14 +49,14 @@ fun GrupoInfoTab(state: DetalleGrupoCloudUiState) {
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
-                    Text("Código de invitación", style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(R.string.codigo_invitacion), style = MaterialTheme.typography.labelLarge)
                     Text(
                         grupo.codigoInvitacion,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        "Comparte este código (botón de compartir arriba) para que otras personas se unan al grupo.",
+                        stringResource(R.string.codigo_ayuda),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -62,7 +64,7 @@ fun GrupoInfoTab(state: DetalleGrupoCloudUiState) {
             }
         }
         item {
-            Text("Miembros (${grupo.miembros.size})", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.miembros_contador, grupo.miembros.size), style = MaterialTheme.typography.titleMedium)
         }
         items(grupo.miembros.entries.toList(), key = { it.key }) { (_, nombre) ->
             Card(Modifier.fillMaxWidth()) {
@@ -85,7 +87,7 @@ fun GastosCloudTab(
 ) {
     val gastos = state.gastos
     if (gastos.isEmpty()) {
-        MensajeVacioCloud("Aún no hay gastos. Pulsa «Nuevo gasto» para añadir el primero.")
+        MensajeVacioCloud(stringResource(R.string.sin_gastos))
         return
     }
     LazyColumn(
@@ -97,7 +99,7 @@ fun GastosCloudTab(
             Card(Modifier.fillMaxWidth()) {
                 ListItem(
                     headlineContent = { Text(g.concepto, style = MaterialTheme.typography.titleMedium) },
-                    supportingContent = { Text("Pagado por: ${g.pagadoPorNombre}") },
+                    supportingContent = { Text(stringResource(R.string.pagado_por_etiqueta, g.pagadoPorNombre)) },
                     trailingContent = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -106,7 +108,7 @@ fun GastosCloudTab(
                                 fontWeight = FontWeight.Bold
                             )
                             IconButton(onClick = { onEliminar(g.id) }) {
-                                Icon(Icons.Default.Delete, "Eliminar")
+                                Icon(Icons.Default.Delete, stringResource(R.string.eliminar))
                             }
                         }
                     }
@@ -132,21 +134,21 @@ fun BalanceCloudTab(state: DetalleGrupoCloudUiState) {
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Column(Modifier.padding(16.dp)) {
-                    Text("Total gastado", style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(R.string.total_gastado), style = MaterialTheme.typography.labelLarge)
                     Text(
                         Moneda.formatear(balance.totalCentimos),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
                     HorizontalDivider(Modifier.padding(vertical = 8.dp))
-                    Text("Coste por persona: ${Moneda.formatear(balance.porPersonaCentimos)}")
+                    Text(stringResource(R.string.por_persona_etiqueta, Moneda.formatear(balance.porPersonaCentimos)))
                 }
             }
         }
         if (balance.saldos.isNotEmpty()) {
-            item { Text("Cómo saldar cuentas", style = MaterialTheme.typography.titleMedium) }
+            item { Text(stringResource(R.string.como_saldar), style = MaterialTheme.typography.titleMedium) }
             if (balance.pagos.isEmpty()) {
-                item { Text("¡Todo está saldado! No hay deudas pendientes.") }
+                item { Text(stringResource(R.string.todo_saldado)) }
             } else {
                 items(balance.pagos) { pago ->
                     Card(Modifier.fillMaxWidth()) {

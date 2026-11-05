@@ -31,12 +31,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.apuntate.R
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel) {
@@ -58,14 +60,15 @@ fun AuthScreen(viewModel: AuthViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Apuntate",
+            text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = if (esRegistro) "Crea tu cuenta" else "Inicia sesión",
+            text = if (esRegistro) stringResource(R.string.auth_subtitulo_registro)
+            else stringResource(R.string.auth_subtitulo_login),
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(Modifier.height(32.dp))
@@ -74,7 +77,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                label = { Text("Nombre") },
+                label = { Text(stringResource(R.string.auth_nombre)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -84,7 +87,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.auth_email)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth()
@@ -94,7 +97,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña") },
+            label = { Text(stringResource(R.string.auth_password)) },
             singleLine = true,
             visualTransformation = if (verPassword) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -102,7 +105,8 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 IconButton(onClick = { verPassword = !verPassword }) {
                     Icon(
                         imageVector = if (verPassword) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = if (verPassword) "Ocultar contraseña" else "Mostrar contraseña"
+                        contentDescription = if (verPassword) stringResource(R.string.auth_ocultar_password)
+                        else stringResource(R.string.auth_mostrar_password)
                     )
                 }
             },
@@ -113,17 +117,17 @@ fun AuthScreen(viewModel: AuthViewModel) {
             TextButton(
                 onClick = { viewModel.recuperarPassword(email) },
                 modifier = Modifier.align(Alignment.End)
-            ) { Text("¿Has olvidado la contraseña?") }
+            ) { Text(stringResource(R.string.auth_olvido_password)) }
         }
 
         Spacer(Modifier.height(8.dp))
 
         ui.error?.let {
-            Text(it, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
+            Text(stringResource(it.textoRes()), color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
         }
-        ui.mensaje?.let {
-            Text(it, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
+        ui.info?.let {
+            Text(stringResource(it.textoRes()), color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
             Spacer(Modifier.height(8.dp))
         }
 
@@ -143,7 +147,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             } else {
-                Text(if (esRegistro) "Registrarse" else "Entrar")
+                Text(if (esRegistro) stringResource(R.string.auth_registrarse) else stringResource(R.string.auth_entrar))
             }
         }
 
@@ -154,8 +158,8 @@ fun AuthScreen(viewModel: AuthViewModel) {
             viewModel.limpiarMensajes()
         }) {
             Text(
-                if (esRegistro) "¿Ya tienes cuenta? Inicia sesión"
-                else "¿No tienes cuenta? Regístrate"
+                if (esRegistro) stringResource(R.string.auth_cambiar_a_login)
+                else stringResource(R.string.auth_cambiar_a_registro)
             )
         }
     }

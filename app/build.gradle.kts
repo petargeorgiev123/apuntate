@@ -38,10 +38,16 @@ android {
     buildFeatures {
         compose = true
     }
+
+    // Guarda y restaura automáticamente el idioma elegido por el usuario (per-app language).
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

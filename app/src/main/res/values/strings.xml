@@ -1,36 +1,101 @@
 <resources>
     <string name="app_name">Apuntate</string>
 
-    <!-- Pantalla de grupos -->
+    <!-- Login / registro -->
+    <string name="auth_subtitulo_registro">Crea tu cuenta</string>
+    <string name="auth_subtitulo_login">Inicia sesión</string>
+    <string name="auth_nombre">Nombre</string>
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Contraseña</string>
+    <string name="auth_mostrar_password">Mostrar contraseña</string>
+    <string name="auth_ocultar_password">Ocultar contraseña</string>
+    <string name="auth_olvido_password">¿Has olvidado la contraseña?</string>
+    <string name="auth_registrarse">Registrarse</string>
+    <string name="auth_entrar">Entrar</string>
+    <string name="auth_cambiar_a_login">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="auth_cambiar_a_registro">¿No tienes cuenta? Regístrate</string>
+    <string name="auth_error_registro">Rellena nombre, email y una contraseña de al menos 6 caracteres.</string>
+    <string name="auth_error_login">Introduce un email válido y la contraseña.</string>
+    <string name="auth_error_email_reset">Escribe tu email para recuperar la contraseña.</string>
+    <string name="auth_reset_enviado">Te hemos enviado un correo para restablecer la contraseña.</string>
+    <string name="auth_err_credenciales">Email o contraseña incorrectos.</string>
+    <string name="auth_err_no_existe">No existe ninguna cuenta con ese email.</string>
+    <string name="auth_err_email_en_uso">Ya existe una cuenta con ese email.</string>
+    <string name="auth_err_email_formato">El email no tiene un formato válido.</string>
+    <string name="auth_err_red">Error de conexión. Comprueba tu internet.</string>
+    <string name="auth_err_generico">No se pudo completar la operación. Inténtalo de nuevo.</string>
+    <string name="auth_err_nombre">Escribe un nombre válido.</string>
+
+    <!-- Lista de grupos -->
     <string name="grupos_titulo">Mis grupos</string>
+    <string name="cuenta">Cuenta</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="mi_perfil">Mi perfil</string>
     <string name="nuevo_grupo">Nuevo grupo</string>
-    <string name="sin_grupos">Todavía no tienes grupos.\n¡Crea uno para empezar a repartir gastos!</string>
-    <string name="crear_grupo">Crear grupo</string>
+    <string name="unirse_con_codigo">Unirse con código</string>
+    <string name="unirse_a_grupo">Unirse a un grupo</string>
+    <string name="codigo_invitacion">Código de invitación</string>
+    <string name="sin_grupos">Todavía no tienes grupos.\nCrea uno nuevo o únete con un código de invitación.</string>
     <string name="nombre_grupo_hint">Nombre del grupo (ej. Esquí Sierra Nevada)</string>
-    <string name="eliminar">Eliminar</string>
+    <string name="miembro_singular">%1$d miembro</string>
+    <string name="miembros_plural">%1$d miembros</string>
+    <string name="unido_ok">¡Te has unido al grupo!</string>
+    <string name="codigo_no_existe">No existe ningún grupo con ese código.</string>
+    <string name="error_crear_grupo">No se pudo crear el grupo. Revisa tu conexión.</string>
+    <string name="error_unirse_grupo">No se pudo unir al grupo. Revisa tu conexión.</string>
+
+    <!-- Comunes -->
+    <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="guardar">Guardar</string>
-    <string name="añadir">Añadir</string>
+    <string name="eliminar">Eliminar</string>
 
     <!-- Detalle del grupo -->
-    <string name="participantes">Participantes</string>
-    <string name="gastos">Gastos</string>
-    <string name="balance">Balance</string>
-    <string name="total_gastado">Total gastado</string>
-    <string name="nuevo_gasto">Nuevo gasto</string>
-    <string name="añadir_participante">Añadir participante</string>
-    <string name="nombre_participante_hint">Nombre de la persona</string>
-    <string name="sin_participantes">Añade participantes para poder registrar gastos.</string>
-    <string name="sin_gastos">Aún no hay gastos registrados.</string>
+    <string name="tab_grupo">Grupo</string>
+    <string name="tab_gastos">Gastos</string>
+    <string name="tab_balance">Balance</string>
+    <string name="tab_chat">Chat</string>
+    <string name="compartir_codigo">Compartir código</string>
+    <string name="compartir_mensaje">¡Únete a nuestro grupo \"%1$s\" en Apuntate! Usa el código de invitación: %2$s</string>
+    <string name="salir_grupo">Salir del grupo</string>
+    <string name="salir_grupo_confirmar">¿Seguro que quieres salir de este grupo? Si eres el único miembro, el grupo se eliminará.</string>
+    <string name="salir">Salir</string>
+    <string name="codigo_ayuda">Comparte este código (botón de compartir arriba) para que otras personas se unan al grupo.</string>
+    <string name="miembros_contador">Miembros (%1$d)</string>
 
-    <!-- Gasto -->
+    <!-- Gastos -->
+    <string name="nuevo_gasto">Nuevo gasto</string>
+    <string name="sin_gastos">Aún no hay gastos. Pulsa «Nuevo gasto» para añadir el primero.</string>
+    <string name="pagado_por_etiqueta">Pagado por: %1$s</string>
     <string name="concepto_hint">Concepto (ej. Coche, Comida, Hotel)</string>
     <string name="importe_hint">Importe (€)</string>
     <string name="pagado_por">Pagado por</string>
     <string name="registrar_gasto">Registrar gasto</string>
 
-    <!-- Balance / liquidación -->
+    <!-- Balance -->
+    <string name="total_gastado">Total gastado</string>
+    <string name="por_persona_etiqueta">Coste por persona: %1$s</string>
     <string name="como_saldar">Cómo saldar cuentas</string>
     <string name="todo_saldado">¡Todo está saldado! No hay deudas pendientes.</string>
-    <string name="por_persona">Coste por persona</string>
+
+    <!-- Chat -->
+    <string name="chat_vacio">No hay mensajes todavía.\n¡Escribe el primero para coordinar el plan!</string>
+    <string name="chat_placeholder">Escribe un mensaje…</string>
+    <string name="chat_enviar">Enviar</string>
+
+    <!-- Perfil -->
+    <string name="perfil_titulo">Mi perfil</string>
+    <string name="perfil_nombre">Nombre</string>
+    <string name="perfil_guardar_nombre">Guardar nombre</string>
+    <string name="perfil_nombre_guardado">Nombre actualizado.</string>
+    <string name="perfil_idioma">Idioma</string>
+    <string name="perfil_idioma_es">Español</string>
+    <string name="perfil_idioma_en">Inglés</string>
+    <string name="perfil_idioma_bg">Búlgaro</string>
+    <string name="perfil_email_etiqueta">Sesión iniciada como %1$s</string>
+
+    <!-- Notificaciones -->
+    <string name="notif_canal_nombre">Mensajes de chat</string>
+    <string name="notif_canal_desc">Avisos de mensajes nuevos en tus grupos</string>
+    <string name="notif_nuevo_mensaje_en">Nuevo mensaje en %1$s</string>
 </resources>

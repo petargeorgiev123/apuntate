@@ -52,6 +52,16 @@ class AuthRepository(
         auth.sendPasswordResetEmail(email.trim()).await()
     }
 
+    /** Actualiza el nombre visible del usuario en su perfil de Firebase. */
+    suspend fun actualizarNombre(nombre: String) {
+        val user = auth.currentUser ?: return
+        val cambios = com.google.firebase.auth.UserProfileChangeRequest.Builder()
+            .setDisplayName(nombre.trim())
+            .build()
+        user.updateProfile(cambios).await()
+        user.reload().await()
+    }
+
     fun cerrarSesion() {
         auth.signOut()
     }

@@ -1,5 +1,6 @@
 package com.apuntate.cloud.screens
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -19,9 +21,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,13 +35,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import android.content.Intent
+import androidx.compose.ui.res.stringResource
+import com.apuntate.R
 import com.apuntate.cloud.DetalleGrupoCloudViewModel
+import com.apuntate.notif.MensajesObserver
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleGrupoCloudScreen(
     viewModel: DetalleGrupoCloudViewModel,
+    observer: MensajesObserver,
+    grupoId: String,
     onVolver: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -46,6 +55,15 @@ fun DetalleGrupoCloudScreen(
     val context = LocalContext.current
 
     val grupo = state.grupo
+
+    // Mientras estamos en la pestaña de chat de este grupo, no notificar sus mensajes.
+    DisposableEffect(pestaña, grupoId) {
+        observer.grupoAbiertoId = if (pestaña == 3) grupoId else null
+        onDispose { observer.grupoAbiertoId = null }
+    }
+
+    val plantillaCompartir = stringResource(R.string.compartir_mensaje, grupo?.nombre ?: "", grupo?.codigoInvitacion ?: "")
+    val tituloCompartir = stringResource(R.string.compartir_codigo)
 
     Scaffold(
         topBar = {
@@ -57,23 +75,18 @@ fun DetalleGrupoCloudScreen(
                     }
                 },
                 actions = {
-                    // Compartir código de invitación
                     IconButton(onClick = {
-                        val codigo = grupo?.codigoInvitacion ?: return@IconButton
+                        grupo ?: return@IconButton
                         val envio = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                "¡Únete a nuestro grupo \"${grupo.nombre}\" en Apuntate! " +
-                                    "Usa el código de invitación: $codigo"
-                            )
+                            putExtra(Intent.EXTRA_TEXT, plantillaCompartir)
                         }
-                        context.startActivity(Intent.createChooser(envio, "Compartir código"))
+                        context.startActivity(Intent.createChooser(envio, tituloCompartir))
                     }) {
-                        Icon(Icons.Default.Share, "Compartir código", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.Share, stringResource(R.string.compartir_codigo), tint = MaterialTheme.colorScheme.onPrimary)
                     }
                     IconButton(onClick = { dialogoSalir = true }) {
-                        Icon(Icons.AutoMirrored.Filled.Logout, "Salir del grupo", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.AutoMirrored.Filled.Logout, stringResource(R.string.salir_grupo), tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -88,7 +101,7 @@ fun DetalleGrupoCloudScreen(
                 ExtendedFloatingActionButton(
                     onClick = { dialogoGasto = true },
                     icon = { Icon(Icons.Default.Add, null) },
-                    text = { Text("Nuevo gasto") }
+                    text = { Text(stringResource(R.string.nuevo_gasto)) }
                 )
             }
         }
@@ -96,13 +109,13 @@ fun DetalleGrupoCloudScreen(
         Column(Modifier.fillMaxSize().padding(padding)) {
             TabRow(selectedTabIndex = pestaña) {
                 Tab(selected = pestaña == 0, onClick = { pestaña = 0 },
-                    text = { Text("Grupo") }, icon = { Icon(Icons.Default.Groups, null) })
+                    text = { Text(stringResource(R.string.tab_grupo)) }, icon = { Icon(Icons.Default.Groups, null) })
                 Tab(selected = pestaña == 1, onClick = { pestaña = 1 },
-                    text = { Text("Gastos") })
+                    text = { Text(stringResource(R.string.tab_gastos)) })
                 Tab(selected = pestaña == 2, onClick = { pestaña = 2 },
-                    text = { Text("Balance") })
+                    text = { Text(stringResource(R.string.tab_balance)) })
                 Tab(selected = pestaña == 3, onClick = { pestaña = 3 },
-                    text = { Text("Chat") }, icon = { Icon(Icons.AutoMirrored.Filled.Chat, null) })
+                    text = { Text(stringResource(R.string.tab_chat)) }, icon = { Icon(Icons.AutoMirrored.Filled.Chat, null) })
             }
             when (pestaña) {
                 0 -> GrupoInfoTab(state)
@@ -129,18 +142,18 @@ fun DetalleGrupoCloudScreen(
     }
 
     if (dialogoSalir) {
-        androidx.compose.material3.AlertDialog(
+        AlertDialog(
             onDismissRequest = { dialogoSalir = false },
-            title = { Text("Salir del grupo") },
-            text = { Text("¿Seguro que quieres salir de este grupo? Si eres el único miembro, el grupo se eliminará.") },
+            title = { Text(stringResource(R.string.salir_grupo)) },
+            text = { Text(stringResource(R.string.salir_grupo_confirmar)) },
             confirmButton = {
-                androidx.compose.material3.TextButton(onClick = {
+                TextButton(onClick = {
                     dialogoSalir = false
                     viewModel.salirDelGrupo(onHecho = onVolver)
-                }) { Text("Salir") }
+                }) { Text(stringResource(R.string.salir)) }
             },
             dismissButton = {
-                androidx.compose.material3.TextButton(onClick = { dialogoSalir = false }) { Text("Cancelar") }
+                TextButton(onClick = { dialogoSalir = false }) { Text(stringResource(R.string.cancelar)) }
             }
         )
     }
