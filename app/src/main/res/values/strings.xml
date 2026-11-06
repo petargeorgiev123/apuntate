@@ -71,6 +71,10 @@
     <string name="importe_hint">Importe (€)</string>
     <string name="pagado_por">Pagado por</string>
     <string name="registrar_gasto">Registrar gasto</string>
+    <string name="reparto_entre">¿Entre quiénes se reparte?</string>
+    <string name="reparto_todos">Todos</string>
+    <string name="reparto_etiqueta">Entre: %1$s</string>
+    <string name="reparto_error_vacio">Selecciona al menos una persona.</string>
 
     <!-- Balance -->
     <string name="total_gastado">Total gastado</string>

@@ -71,6 +71,10 @@
     <string name="importe_hint">Amount (€)</string>
     <string name="pagado_por">Paid by</string>
     <string name="registrar_gasto">Add expense</string>
+    <string name="reparto_entre">Split between whom?</string>
+    <string name="reparto_todos">Everyone</string>
+    <string name="reparto_etiqueta">Between: %1$s</string>
+    <string name="reparto_error_vacio">Select at least one person.</string>
 
     <!-- Balance -->
     <string name="total_gastado">Total spent</string>

@@ -13,6 +13,8 @@ data class Pago(
 data class ResumenBalanceCloud(
     val totalCentimos: Long,
     val porPersonaCentimos: Long,
+    /** true si todos los gastos se reparten entre todos los miembros (coste por persona válido). */
+    val repartoEquitativo: Boolean,
     /** Saldo neto por nombre de miembro (positivo = le deben, negativo = debe). */
     val saldos: List<SaldoMiembro>,
     val pagos: List<Pago>
@@ -27,43 +29,63 @@ data class SaldoMiembro(
 object CalculadoraLiquidacionCloud {
 
     /**
-     * Calcula total, coste por persona, saldos y pagos para saldar, usando el mismo
-     * algoritmo probado de la versión local. Trabaja en céntimos (Long).
+     * Calcula total, saldos y pagos para saldar. Trabaja en céntimos (Long).
+     *
+     * Cada gasto se reparte SOLO entre sus participantes (campo participantesUids).
+     * Si un gasto no tiene participantes definidos, se reparte entre todos los miembros.
+     * Los céntimos sobrantes de cada gasto se asignan a los primeros participantes para
+     * que la suma cuadre exactamente.
      *
      * @param miembros mapa uid -> nombre de los miembros del grupo.
      * @param gastos lista de gastos del grupo.
      */
     fun calcular(miembros: Map<String, String>, gastos: List<GastoCloud>): ResumenBalanceCloud {
         if (miembros.isEmpty()) {
-            return ResumenBalanceCloud(0, 0, emptyList(), emptyList())
+            return ResumenBalanceCloud(0, 0, true, emptyList(), emptyList())
         }
 
-        val total = gastos.sumOf { it.importeCentimos }
         val uids = miembros.keys.toList()
-        val n = uids.size
+        val total = gastos.sumOf { it.importeCentimos }
 
-        // Reparto justo de céntimos: los primeros 'resto' pagan 1 céntimo más.
-        val base = total / n
-        val resto = (total % n).toInt()
-        val cuotaPorUid: Map<String, Long> = uids.mapIndexed { index, uid ->
-            uid to (base + if (index < resto) 1L else 0L)
-        }.toMap()
+        // Acumulado de "lo que debe cada uno" (su parte) y "lo que pagó".
+        val debePorUid = HashMap<String, Long>()
+        val pagoPorUid = HashMap<String, Long>()
+        var repartoEquitativo = true
 
-        val pagadoPorUid: Map<String, Long> = gastos
-            .groupBy { it.pagadoPorUid }
-            .mapValues { entry -> entry.value.sumOf { it.importeCentimos } }
+        for (gasto in gastos) {
+            // Participantes del gasto: los indicados, o todos los miembros si no hay ninguno.
+            val participantes = gasto.participantesUids
+                .filter { it in miembros } // ignorar uids que ya no sean miembros
+                .ifEmpty { uids }
+
+            if (participantes.size != uids.size) repartoEquitativo = false
+
+            // Reparto del importe del gasto entre sus participantes (céntimos exactos).
+            val n = participantes.size
+            if (n > 0) {
+                val base = gasto.importeCentimos / n
+                val resto = (gasto.importeCentimos % n).toInt()
+                participantes.forEachIndexed { index, uid ->
+                    val parte = base + if (index < resto) 1L else 0L
+                    debePorUid[uid] = (debePorUid[uid] ?: 0L) + parte
+                }
+            }
+            // Lo que pagó el pagador.
+            pagoPorUid[gasto.pagadoPorUid] = (pagoPorUid[gasto.pagadoPorUid] ?: 0L) + gasto.importeCentimos
+        }
 
         val saldos: List<SaldoMiembro> = uids.map { uid ->
             SaldoMiembro(
                 uid = uid,
                 nombre = miembros[uid] ?: "?",
-                saldoCentimos = (pagadoPorUid[uid] ?: 0L) - (cuotaPorUid[uid] ?: 0L)
+                saldoCentimos = (pagoPorUid[uid] ?: 0L) - (debePorUid[uid] ?: 0L)
             )
         }
 
         return ResumenBalanceCloud(
             totalCentimos = total,
-            porPersonaCentimos = total / n,
+            porPersonaCentimos = if (uids.isNotEmpty()) total / uids.size else 0L,
+            repartoEquitativo = repartoEquitativo,
             saldos = saldos,
             pagos = calcularPagos(saldos)
         )

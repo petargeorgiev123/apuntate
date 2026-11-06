@@ -71,6 +71,10 @@
     <string name="importe_hint">Сума (€)</string>
     <string name="pagado_por">Платено от</string>
     <string name="registrar_gasto">Добави разход</string>
+    <string name="reparto_entre">Между кого се разделя?</string>
+    <string name="reparto_todos">Всички</string>
+    <string name="reparto_etiqueta">Между: %1$s</string>
+    <string name="reparto_error_vacio">Избери поне един човек.</string>
 
     <!-- Баланс -->
     <string name="total_gastado">Общо похарчено</string>

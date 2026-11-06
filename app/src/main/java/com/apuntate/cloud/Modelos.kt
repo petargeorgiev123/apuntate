@@ -30,6 +30,12 @@ data class GastoCloud(
     val pagadoPorUid: String = "",
     /** Nombre del pagador en el momento del gasto (para mostrar sin otra consulta). */
     val pagadoPorNombre: String = "",
+    /**
+     * UIDs de las personas entre las que se reparte este gasto.
+     * Si está vacío, el gasto se reparte entre TODOS los miembros del grupo
+     * (compatibilidad con gastos antiguos que no tenían este campo).
+     */
+    val participantesUids: List<String> = emptyList(),
     val creadoEn: Timestamp? = null
 )
 

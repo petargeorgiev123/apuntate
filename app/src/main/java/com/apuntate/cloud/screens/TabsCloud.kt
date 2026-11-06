@@ -20,6 +20,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -90,16 +91,42 @@ fun GastosCloudTab(
         MensajeVacioCloud(stringResource(R.string.sin_gastos))
         return
     }
+    val miembros = state.grupo?.miembros ?: emptyMap()
+    val totalMiembros = miembros.size
+
     LazyColumn(
         Modifier.fillMaxSize(),
         contentPadding = PaddingValues(12.dp, 12.dp, 12.dp, 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(gastos, key = { it.id }) { g ->
-            Card(Modifier.fillMaxWidth()) {
+            // Participantes efectivos: los indicados o, si no hay, todos.
+            val participantesUids = g.participantesUids.filter { it in miembros }
+            val esEntreTodos = participantesUids.isEmpty() || participantesUids.size == totalMiembros
+
+            // Tonalidad ligeramente distinta para gastos no repartidos entre todos.
+            val colorCard = if (esEntreTodos) CardDefaults.cardColors()
+            else CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
+            )
+
+            Card(Modifier.fillMaxWidth(), colors = colorCard) {
                 ListItem(
+                    colors = ListItemDefaults.colors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
                     headlineContent = { Text(g.concepto, style = MaterialTheme.typography.titleMedium) },
-                    supportingContent = { Text(stringResource(R.string.pagado_por_etiqueta, g.pagadoPorNombre)) },
+                    supportingContent = {
+                        Column {
+                            Text(stringResource(R.string.pagado_por_etiqueta, g.pagadoPorNombre))
+                            if (!esEntreTodos) {
+                                val nombres = participantesUids.mapNotNull { miembros[it] }.joinToString(", ")
+                                Text(
+                                    stringResource(R.string.reparto_etiqueta, nombres),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    },
                     trailingContent = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -140,8 +167,12 @@ fun BalanceCloudTab(state: DetalleGrupoCloudUiState) {
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    HorizontalDivider(Modifier.padding(vertical = 8.dp))
-                    Text(stringResource(R.string.por_persona_etiqueta, Moneda.formatear(balance.porPersonaCentimos)))
+                    // El coste por persona solo tiene sentido si todos los gastos
+                    // se reparten entre todos. Si hay gastos no equitativos, se oculta.
+                    if (balance.repartoEquitativo) {
+                        HorizontalDivider(Modifier.padding(vertical = 8.dp))
+                        Text(stringResource(R.string.por_persona_etiqueta, Moneda.formatear(balance.porPersonaCentimos)))
+                    }
                 }
             }
         }

@@ -15,7 +15,7 @@ data class DetalleGrupoCloudUiState(
     val grupo: GrupoCloud? = null,
     val gastos: List<GastoCloud> = emptyList(),
     val mensajes: List<MensajeCloud> = emptyList(),
-    val balance: ResumenBalanceCloud = ResumenBalanceCloud(0, 0, emptyList(), emptyList())
+    val balance: ResumenBalanceCloud = ResumenBalanceCloud(0, 0, true, emptyList(), emptyList())
 )
 
 class DetalleGrupoCloudViewModel(
@@ -49,10 +49,16 @@ class DetalleGrupoCloudViewModel(
         }
     }
 
-    fun añadirGasto(concepto: String, importeCentimos: Long, pagadoPorUid: String, pagadoPorNombre: String) {
-        if (concepto.isBlank() || importeCentimos <= 0) return
+    fun añadirGasto(
+        concepto: String,
+        importeCentimos: Long,
+        pagadoPorUid: String,
+        pagadoPorNombre: String,
+        participantesUids: List<String>
+    ) {
+        if (concepto.isBlank() || importeCentimos <= 0 || participantesUids.isEmpty()) return
         viewModelScope.launch {
-            repo.añadirGasto(grupoId, concepto, importeCentimos, pagadoPorUid, pagadoPorNombre)
+            repo.añadirGasto(grupoId, concepto, importeCentimos, pagadoPorUid, pagadoPorNombre, participantesUids)
         }
     }
 

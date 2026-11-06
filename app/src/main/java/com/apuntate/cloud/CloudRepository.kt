@@ -119,13 +119,15 @@ class CloudRepository(
         concepto: String,
         importeCentimos: Long,
         pagadoPorUid: String,
-        pagadoPorNombre: String
+        pagadoPorNombre: String,
+        participantesUids: List<String>
     ) {
         val datos = hashMapOf(
             "concepto" to concepto.trim(),
             "importeCentimos" to importeCentimos,
             "pagadoPorUid" to pagadoPorUid,
             "pagadoPorNombre" to pagadoPorNombre,
+            "participantesUids" to participantesUids,
             "creadoEn" to FieldValue.serverTimestamp()
         )
         grupos.document(grupoId).collection("gastos").add(datos).await()

@@ -145,8 +145,8 @@ fun DetalleGrupoCloudScreen(
     if (dialogoGasto) {
         DialogoGastoCloud(
             miembros = grupo?.miembros ?: emptyMap(),
-            onConfirmar = { concepto, centimos, uid, nombre ->
-                viewModel.añadirGasto(concepto, centimos, uid, nombre)
+            onConfirmar = { concepto, centimos, uid, nombre, participantes ->
+                viewModel.añadirGasto(concepto, centimos, uid, nombre, participantes)
                 dialogoGasto = false
             },
             onCancelar = { dialogoGasto = false }
