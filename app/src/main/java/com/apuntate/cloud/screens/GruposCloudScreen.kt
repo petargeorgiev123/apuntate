@@ -91,7 +91,7 @@ fun GruposCloudScreen(
                 title = { Text(stringResource(R.string.grupos_titulo)) },
                 actions = {
                     IconButton(onClick = { menuUsuario = true }) {
-                        Icon(Icons.Default.AccountCircle, stringResource(R.string.cuenta), tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.AccountCircle, stringResource(R.string.cuenta))
                     }
                     DropdownMenu(expanded = menuUsuario, onDismissRequest = { menuUsuario = false }) {
                         if (nombreUsuario.isNotBlank()) {
@@ -114,8 +114,9 @@ fun GruposCloudScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         },

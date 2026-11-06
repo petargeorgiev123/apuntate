@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
@@ -26,13 +28,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -49,7 +51,9 @@ fun DetalleGrupoCloudScreen(
     onVolver: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
-    var pestaña by remember { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState(pageCount = { 4 })
+    val pestaña = pagerState.currentPage
+    val scope = rememberCoroutineScope()
     var dialogoGasto by remember { mutableStateOf(false) }
     var dialogoSalir by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -83,16 +87,17 @@ fun DetalleGrupoCloudScreen(
                         }
                         context.startActivity(Intent.createChooser(envio, tituloCompartir))
                     }) {
-                        Icon(Icons.Default.Share, stringResource(R.string.compartir_codigo), tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.Share, stringResource(R.string.compartir_codigo))
                     }
                     IconButton(onClick = { dialogoSalir = true }) {
-                        Icon(Icons.AutoMirrored.Filled.Logout, stringResource(R.string.salir_grupo), tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.AutoMirrored.Filled.Logout, stringResource(R.string.salir_grupo))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface
                 )
             )
         },
@@ -108,24 +113,31 @@ fun DetalleGrupoCloudScreen(
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             TabRow(selectedTabIndex = pestaña) {
-                Tab(selected = pestaña == 0, onClick = { pestaña = 0 },
+                val irA: (Int) -> Unit = { destino -> scope.launch { pagerState.animateScrollToPage(destino) } }
+                Tab(selected = pestaña == 0, onClick = { irA(0) },
                     text = { Text(stringResource(R.string.tab_grupo)) }, icon = { Icon(Icons.Default.Groups, null) })
-                Tab(selected = pestaña == 1, onClick = { pestaña = 1 },
+                Tab(selected = pestaña == 1, onClick = { irA(1) },
                     text = { Text(stringResource(R.string.tab_gastos)) })
-                Tab(selected = pestaña == 2, onClick = { pestaña = 2 },
+                Tab(selected = pestaña == 2, onClick = { irA(2) },
                     text = { Text(stringResource(R.string.tab_balance)) })
-                Tab(selected = pestaña == 3, onClick = { pestaña = 3 },
+                Tab(selected = pestaña == 3, onClick = { irA(3) },
                     text = { Text(stringResource(R.string.tab_chat)) }, icon = { Icon(Icons.AutoMirrored.Filled.Chat, null) })
             }
-            when (pestaña) {
-                0 -> GrupoInfoTab(state)
-                1 -> GastosCloudTab(state, onEliminar = viewModel::eliminarGasto)
-                2 -> BalanceCloudTab(state)
-                3 -> ChatTab(
-                    mensajes = state.mensajes,
-                    miUid = viewModel.uid,
-                    onEnviar = viewModel::enviarMensaje
-                )
+            // Deslizar horizontalmente para cambiar de pestaña.
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { pagina ->
+                when (pagina) {
+                    0 -> GrupoInfoTab(state)
+                    1 -> GastosCloudTab(state, onEliminar = viewModel::eliminarGasto)
+                    2 -> BalanceCloudTab(state)
+                    3 -> ChatTab(
+                        mensajes = state.mensajes,
+                        miUid = viewModel.uid,
+                        onEnviar = viewModel::enviarMensaje
+                    )
+                }
             }
         }
     }
