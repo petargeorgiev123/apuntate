@@ -60,9 +60,10 @@ fun DetalleGrupoCloudScreen(
 
     val grupo = state.grupo
 
+    // Orden de pestañas: 0 Gastos, 1 Balance, 2 Chat, 3 Grupo.
     // Mientras estamos en la pestaña de chat de este grupo, no notificar sus mensajes.
     DisposableEffect(pestaña, grupoId) {
-        observer.grupoAbiertoId = if (pestaña == 3) grupoId else null
+        observer.grupoAbiertoId = if (pestaña == 2) grupoId else null
         onDispose { observer.grupoAbiertoId = null }
     }
 
@@ -102,7 +103,7 @@ fun DetalleGrupoCloudScreen(
             )
         },
         floatingActionButton = {
-            if (pestaña == 1) {
+            if (pestaña == 0) {
                 ExtendedFloatingActionButton(
                     onClick = { dialogoGasto = true },
                     icon = { Icon(Icons.Default.Add, null) },
@@ -115,13 +116,13 @@ fun DetalleGrupoCloudScreen(
             TabRow(selectedTabIndex = pestaña) {
                 val irA: (Int) -> Unit = { destino -> scope.launch { pagerState.animateScrollToPage(destino) } }
                 Tab(selected = pestaña == 0, onClick = { irA(0) },
-                    text = { Text(stringResource(R.string.tab_grupo)) }, icon = { Icon(Icons.Default.Groups, null) })
-                Tab(selected = pestaña == 1, onClick = { irA(1) },
                     text = { Text(stringResource(R.string.tab_gastos)) })
-                Tab(selected = pestaña == 2, onClick = { irA(2) },
+                Tab(selected = pestaña == 1, onClick = { irA(1) },
                     text = { Text(stringResource(R.string.tab_balance)) })
-                Tab(selected = pestaña == 3, onClick = { irA(3) },
+                Tab(selected = pestaña == 2, onClick = { irA(2) },
                     text = { Text(stringResource(R.string.tab_chat)) }, icon = { Icon(Icons.AutoMirrored.Filled.Chat, null) })
+                Tab(selected = pestaña == 3, onClick = { irA(3) },
+                    text = { Text(stringResource(R.string.tab_grupo)) }, icon = { Icon(Icons.Default.Groups, null) })
             }
             // Deslizar horizontalmente para cambiar de pestaña.
             HorizontalPager(
@@ -129,14 +130,14 @@ fun DetalleGrupoCloudScreen(
                 modifier = Modifier.fillMaxSize()
             ) { pagina ->
                 when (pagina) {
-                    0 -> GrupoInfoTab(state)
-                    1 -> GastosCloudTab(state, onEliminar = viewModel::eliminarGasto)
-                    2 -> BalanceCloudTab(state)
-                    3 -> ChatTab(
+                    0 -> GastosCloudTab(state, onEliminar = viewModel::eliminarGasto)
+                    1 -> BalanceCloudTab(state)
+                    2 -> ChatTab(
                         mensajes = state.mensajes,
                         miUid = viewModel.uid,
                         onEnviar = viewModel::enviarMensaje
                     )
+                    3 -> GrupoInfoTab(state)
                 }
             }
         }
