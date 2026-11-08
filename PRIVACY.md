@@ -25,7 +25,7 @@ Puedes salir de un grupo en cualquier momento. Si eres el último miembro, el gr
 Puedes eliminar tu cuenta y tus datos desde la app (**Mi perfil → Eliminar cuenta**) o siguiendo las instrucciones de [DELETE_ACCOUNT.md](DELETE_ACCOUNT.md). Los gastos que registraste en grupos con más miembros se conservan sin tu nombre, como «Usuario eliminado», para no alterar las cuentas del grupo.
 
 ### Contacto
-**[TU EMAIL DE CONTACTO]**
+**petargeorgiev123@gmail.com**
 
 ---
 
@@ -52,4 +52,4 @@ You can leave a group at any time. If you are the last member, the group and its
 You can delete your account and data from the app (**My profile → Delete account**) or by following [DELETE_ACCOUNT.md](DELETE_ACCOUNT.md). Expenses you logged in groups with other members are kept without your name, as "Usuario eliminado", so the group's balances are not altered.
 
 ### Contact
-**[YOUR CONTACT EMAIL]**
+**petargeorgiev123@gmail.com**

@@ -9,7 +9,7 @@
 4. Confirma tu contraseña y pulsa **Eliminar definitivamente**.
 
 ### Sin acceso a la app
-Escribe a **[TU EMAIL DE CONTACTO]** desde el correo con el que te registraste, con el asunto «Eliminar cuenta». Eliminaremos tu cuenta y tus datos.
+Escribe a **petargeorgiev123@gmail.com** desde el correo con el que te registraste, con el asunto «Eliminar cuenta». Eliminaremos tu cuenta y tus datos.
 
 ### Qué se elimina
 - Tu cuenta (correo, nombre y contraseña).
@@ -31,7 +31,7 @@ Los gastos que registraste en grupos con más miembros se conservan, atribuidos 
 4. Confirm your password and tap **Delete permanently**.
 
 ### Without access to the app
-Email **[YOUR CONTACT EMAIL]** from the address you registered with, with the subject "Delete account". We will delete your account and data.
+Email **petargeorgiev123@gmail.com** from the address you registered with, with the subject "Delete account". We will delete your account and data.
 
 ### What is deleted
 - Your account (email, name and password).
