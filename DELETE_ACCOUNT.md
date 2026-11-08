@@ -20,6 +20,8 @@ Escribe a **petargeorgiev123@gmail.com** desde el correo con el que te registras
 ### Qué se conserva
 Los gastos que registraste en grupos con más miembros se conservan, atribuidos a «Usuario eliminado», para no alterar las cuentas del resto del grupo. No incluyen tu correo ni tu nombre.
 
+**Grupos de los que ya habías salido:** al salir de un grupo, tu nombre se mantiene en su historial de gastos para que las cuentas sigan cuadrando. Eliminar la cuenta desde la app no puede modificar esos grupos. Si quieres que se borre tu nombre de ellos, escribe a petargeorgiev123@gmail.com indicando el grupo.
+
 ---
 
 ## English
@@ -41,3 +43,5 @@ Email **petargeorgiev123@gmail.com** from the address you registered with, with 
 
 ### What is kept
 Expenses you logged in groups with other members are kept, attributed to "Usuario eliminado" (deleted user), so the rest of the group's balances are not altered. They do not include your email or name.
+
+**Groups you had already left:** when you leave a group, your name stays in its expense history so the balances keep adding up. Deleting your account from the app cannot modify those groups. If you want your name removed from them, email petargeorgiev123@gmail.com stating the group.

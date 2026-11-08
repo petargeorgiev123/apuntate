@@ -58,7 +58,7 @@
     <string name="compartir_codigo">Share code</string>
     <string name="compartir_mensaje">Join our group \"%1$s\" on Apuntate! Use the invitation code: %2$s</string>
     <string name="salir_grupo">Leave group</string>
-    <string name="salir_grupo_confirmar">Are you sure you want to leave this group? If you are the only member, the group will be deleted.</string>
+    <string name="salir_grupo_confirmar">Are you sure you want to leave this group? Your expenses and debts will still count in the group\'s balance. If you are the only member, the group will be deleted.</string>
     <string name="salir">Leave</string>
     <string name="codigo_ayuda">Share this code (share button above) so other people can join the group.</string>
     <string name="miembros_contador">Members (%1$d)</string>

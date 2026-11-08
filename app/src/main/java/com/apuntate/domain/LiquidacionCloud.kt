@@ -28,6 +28,9 @@ data class SaldoMiembro(
 
 object CalculadoraLiquidacionCloud {
 
+    /** Nombre por defecto de alguien que ya no está en el grupo y del que no se conoce el nombre. */
+    private const val NOMBRE_EX_MIEMBRO = "Ex-miembro"
+
     /**
      * Calcula total, saldos y pagos para saldar. Trabaja en céntimos (Long).
      *
@@ -44,7 +47,18 @@ object CalculadoraLiquidacionCloud {
             return ResumenBalanceCloud(0, 0, true, emptyList(), emptyList())
         }
 
-        val uids = miembros.keys.toList()
+        // Personas que cuentan en el balance: los miembros del grupo más cualquiera que aparezca
+        // en los gastos (p. ej. alguien que salió del grupo pero cuyas deudas siguen vigentes).
+        val nombres = LinkedHashMap<String, String>(miembros)
+        for (gasto in gastos) {
+            if (gasto.pagadoPorUid.isNotBlank() && gasto.pagadoPorUid !in nombres) {
+                nombres[gasto.pagadoPorUid] = gasto.pagadoPorNombre.ifBlank { NOMBRE_EX_MIEMBRO }
+            }
+            for (p in gasto.participantesUids) {
+                if (p !in nombres) nombres[p] = NOMBRE_EX_MIEMBRO
+            }
+        }
+        val uids = nombres.keys.toList()
         val total = gastos.sumOf { it.importeCentimos }
 
         // Acumulado de "lo que debe cada uno" (su parte) y "lo que pagó".
@@ -53,10 +67,8 @@ object CalculadoraLiquidacionCloud {
         var repartoEquitativo = true
 
         for (gasto in gastos) {
-            // Participantes del gasto: los indicados, o todos los miembros si no hay ninguno.
-            val participantes = gasto.participantesUids
-                .filter { it in miembros } // ignorar uids que ya no sean miembros
-                .ifEmpty { uids }
+            // Participantes del gasto: los indicados, o todos si no hay ninguno (gastos antiguos).
+            val participantes = gasto.participantesUids.ifEmpty { uids }
 
             if (participantes.size != uids.size) repartoEquitativo = false
 
@@ -77,7 +89,7 @@ object CalculadoraLiquidacionCloud {
         val saldos: List<SaldoMiembro> = uids.map { uid ->
             SaldoMiembro(
                 uid = uid,
-                nombre = miembros[uid] ?: "?",
+                nombre = nombres[uid] ?: NOMBRE_EX_MIEMBRO,
                 saldoCentimos = (pagoPorUid[uid] ?: 0L) - (debePorUid[uid] ?: 0L)
             )
         }

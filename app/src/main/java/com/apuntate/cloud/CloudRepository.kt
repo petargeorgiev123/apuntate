@@ -99,12 +99,9 @@ class CloudRepository(
         if (grupo != null && grupo.miembrosUids.size <= 1) {
             borrarGrupoCompleto(ref)
         } else {
-            ref.update(
-                mapOf(
-                    "miembrosUids" to FieldValue.arrayRemove(uid),
-                    "miembros.$uid" to FieldValue.delete()
-                )
-            ).await()
+            // Se quita de los miembros activos pero se conserva su nombre en "miembros", para que
+            // sus gastos y deudas sigan contando en el balance y se vea quién es.
+            ref.update("miembrosUids", FieldValue.arrayRemove(uid)).await()
         }
     }
 
