@@ -7,6 +7,9 @@ name: Compilar AAB (Google Play)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   bundle:
     runs-on: ubuntu-latest
@@ -54,3 +57,20 @@ jobs:
           name: ${{ env.FIRMADO == 'si' && 'apuntate-release-aab' || 'apuntate-aab-SIN-FIRMAR' }}
           path: app/build/outputs/bundle/release/*.aab
           if-no-files-found: error
+
+      # Solo si está firmado: publica el .aab con enlace de descarga directa (sin zip).
+      - name: Preparar AAB para descarga directa
+        if: env.FIRMADO == 'si'
+        run: cp app/build/outputs/bundle/release/app-release.aab apuntate-play.aab
+
+      - name: Publicar AAB firmado en la versión "aab-play"
+        if: env.FIRMADO == 'si'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: aab-play
+          name: AAB firmado para Google Play
+          body: |
+            AAB firmado para subir a Google Play Console.
+            Se actualiza cada vez que se ejecuta el workflow "Compilar AAB (Google Play)".
+          files: apuntate-play.aab
+          make_latest: false
