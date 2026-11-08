@@ -1,5 +1,6 @@
 package com.apuntate.cloud
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -18,6 +19,11 @@ class CloudRepository(
 ) {
 
     private val grupos = db.collection("grupos")
+
+    companion object {
+        /** Nombre que sustituye al de un usuario que ha eliminado su cuenta. */
+        const val ETIQUETA_USUARIO_ELIMINADO = "Usuario eliminado"
+    }
 
     // ---------------- Grupos ----------------
 
@@ -91,7 +97,7 @@ class CloudRepository(
         val snap = ref.get().await()
         val grupo = snap.toObject(GrupoCloud::class.java)
         if (grupo != null && grupo.miembrosUids.size <= 1) {
-            ref.delete().await()
+            borrarGrupoCompleto(ref)
         } else {
             ref.update(
                 mapOf(
@@ -188,6 +194,57 @@ class CloudRepository(
             "enviadoEn" to FieldValue.serverTimestamp()
         )
         grupos.document(grupoId).collection("mensajes").add(datos).await()
+    }
+
+    // ---------------- Eliminación de cuenta ----------------
+
+    /**
+     * Elimina los datos personales del usuario en todos sus grupos:
+     *  - Grupos donde es el último miembro: se borran por completo.
+     *  - Resto de grupos: se borran sus mensajes, deja de ser miembro y su nombre pasa a
+     *    [ETIQUETA_USUARIO_ELIMINADO]. Sus gastos se conservan con esa etiqueta para no
+     *    alterar las cuentas del resto del grupo.
+     */
+    suspend fun eliminarDatosDeUsuario(uid: String) {
+        val misGrupos = grupos.whereArrayContains("miembrosUids", uid).get().await()
+        for (doc in misGrupos.documents) {
+            val grupo = doc.toObject(GrupoCloud::class.java) ?: continue
+            if (grupo.miembrosUids.size <= 1) {
+                borrarGrupoCompleto(doc.reference)
+                continue
+            }
+            val gastos = doc.reference.collection("gastos")
+                .whereEqualTo("pagadoPorUid", uid).get().await()
+            for (g in gastos.documents) {
+                g.reference.update("pagadoPorNombre", ETIQUETA_USUARIO_ELIMINADO).await()
+            }
+            val mensajes = doc.reference.collection("mensajes")
+                .whereEqualTo("autorUid", uid).get().await()
+            for (m in mensajes.documents) {
+                m.reference.delete().await()
+            }
+            doc.reference.update(
+                mapOf(
+                    "miembrosUids" to FieldValue.arrayRemove(uid),
+                    "miembros.$uid" to ETIQUETA_USUARIO_ELIMINADO
+                )
+            ).await()
+        }
+    }
+
+    /** Borra un grupo y el contenido de sus subcolecciones (Firestore no lo hace en cascada). */
+    private suspend fun borrarGrupoCompleto(ref: DocumentReference) {
+        for (sub in listOf("gastos", "mensajes")) {
+            val docs = ref.collection(sub).get().await().documents
+            for (d in docs) {
+                try {
+                    d.reference.delete().await()
+                } catch (_: Exception) {
+                    // Las reglas pueden impedir borrar mensajes ajenos; no bloquea el borrado del grupo.
+                }
+            }
+        }
+        ref.delete().await()
     }
 
     private fun generarCodigo(longitud: Int = 6): String {

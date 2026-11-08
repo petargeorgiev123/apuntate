@@ -145,7 +145,8 @@ fun DetalleGrupoCloudScreen(
 
     if (dialogoGasto) {
         DialogoGastoCloud(
-            miembros = grupo?.miembros ?: emptyMap(),
+            // Solo miembros activos (excluye a quienes eliminaron su cuenta).
+            miembros = grupo?.let { g -> g.miembros.filterKeys { it in g.miembrosUids } } ?: emptyMap(),
             onConfirmar = { concepto, centimos, uid, nombre, participantes ->
                 viewModel.añadirGasto(concepto, centimos, uid, nombre, participantes)
                 dialogoGasto = false

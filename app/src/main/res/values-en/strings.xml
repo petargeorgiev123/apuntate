@@ -102,6 +102,15 @@
     <string name="perfil_quitar_foto">Remove photo</string>
     <string name="perfil_foto_local">The photo is saved only on this device.</string>
 
+    <!-- Delete account -->
+    <string name="eliminar_cuenta">Delete account</string>
+    <string name="eliminar_cuenta_titulo">Delete your account?</string>
+    <string name="eliminar_cuenta_aviso">Your account will be permanently deleted. You will leave all your groups and your messages will be erased. Your past expenses will be kept as \"Usuario eliminado\" so the group\'s balances are not altered. This cannot be undone.</string>
+    <string name="eliminar_cuenta_password">Confirm your password</string>
+    <string name="eliminar_cuenta_confirmar">Delete permanently</string>
+    <string name="eliminar_cuenta_err_password">Enter your password.</string>
+    <string name="eliminar_cuenta_err_credenciales">Incorrect password.</string>
+
     <!-- Notifications -->
     <string name="notif_canal_nombre">Chat messages</string>
     <string name="notif_canal_desc">Alerts for new messages in your groups</string>

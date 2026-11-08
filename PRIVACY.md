@@ -21,7 +21,8 @@ _Última actualización / Last updated: 2026-11-04_
 - No vendemos datos ni los usamos para publicidad. No usamos analítica ni rastreadores de terceros.
 
 ### Conservación y eliminación
-Puedes salir de un grupo en cualquier momento. Si eres el último miembro, el grupo y sus datos se eliminan. Para solicitar la eliminación de tu cuenta y de tus datos, escribe a: **[TU EMAIL DE CONTACTO]**.
+Puedes salir de un grupo en cualquier momento. Si eres el último miembro, el grupo y sus datos se eliminan.
+Puedes eliminar tu cuenta y tus datos desde la app (**Mi perfil → Eliminar cuenta**) o siguiendo las instrucciones de [DELETE_ACCOUNT.md](DELETE_ACCOUNT.md). Los gastos que registraste en grupos con más miembros se conservan sin tu nombre, como «Usuario eliminado», para no alterar las cuentas del grupo.
 
 ### Contacto
 **[TU EMAIL DE CONTACTO]**
@@ -47,7 +48,8 @@ Only to provide the app's features: signing in, sharing groups, calculating bala
 - We do not sell data or use it for advertising. We do not use third-party analytics or trackers.
 
 ### Retention and deletion
-You can leave a group at any time. If you are the last member, the group and its data are deleted. To request deletion of your account and data, email: **[YOUR CONTACT EMAIL]**.
+You can leave a group at any time. If you are the last member, the group and its data are deleted.
+You can delete your account and data from the app (**My profile → Delete account**) or by following [DELETE_ACCOUNT.md](DELETE_ACCOUNT.md). Expenses you logged in groups with other members are kept without your name, as "Usuario eliminado", so the group's balances are not altered.
 
 ### Contact
 **[YOUR CONTACT EMAIL]**

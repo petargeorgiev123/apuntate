@@ -64,10 +64,11 @@ fun GrupoInfoTab(state: DetalleGrupoCloudUiState) {
                 }
             }
         }
+        val activos = grupo.miembros.entries.filter { it.key in grupo.miembrosUids }
         item {
-            Text(stringResource(R.string.miembros_contador, grupo.miembros.size), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.miembros_contador, activos.size), style = MaterialTheme.typography.titleMedium)
         }
-        items(grupo.miembros.entries.toList(), key = { it.key }) { (_, nombre) ->
+        items(activos, key = { it.key }) { (_, nombre) ->
             Card(Modifier.fillMaxWidth()) {
                 ListItem(
                     headlineContent = { Text(nombre) },
@@ -92,7 +93,8 @@ fun GastosCloudTab(
         return
     }
     val miembros = state.grupo?.miembros ?: emptyMap()
-    val totalMiembros = miembros.size
+    // Miembros activos (excluye a quienes eliminaron su cuenta).
+    val activosUids = state.grupo?.miembrosUids?.toSet() ?: emptySet()
 
     LazyColumn(
         Modifier.fillMaxSize(),
@@ -102,7 +104,7 @@ fun GastosCloudTab(
         items(gastos, key = { it.id }) { g ->
             // Participantes efectivos: los indicados o, si no hay, todos.
             val participantesUids = g.participantesUids.filter { it in miembros }
-            val esEntreTodos = participantesUids.isEmpty() || participantesUids.size == totalMiembros
+            val esEntreTodos = participantesUids.isEmpty() || activosUids.all { it in participantesUids }
 
             // Tonalidad ligeramente distinta para gastos no repartidos entre todos.
             val colorCard = if (esEntreTodos) CardDefaults.cardColors()

@@ -1,7 +1,11 @@
 package com.apuntate.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.apuntate.auth.EliminarCuentaViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,6 +38,7 @@ fun ApuntateApp(
 ) {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory(authRepo))
+    val appContext = LocalContext.current.applicationContext
 
     NavHost(navController = navController, startDestination = Rutas.GRUPOS) {
         composable(Rutas.GRUPOS) {
@@ -61,12 +66,20 @@ fun ApuntateApp(
             )
         }
         composable(Rutas.PERFIL) {
+            val eliminarVm: EliminarCuentaViewModel = viewModel(
+                factory = EliminarCuentaViewModel.Factory(authRepo, cloudRepo, appContext)
+            )
+            val estadoEliminar by eliminarVm.estado.collectAsState()
             PerfilScreen(
                 nombreActual = nombreUsuario,
                 email = email,
                 onGuardarNombre = { nuevoNombre, onHecho ->
                     authViewModel.actualizarNombre(nuevoNombre, onHecho)
                 },
+                eliminando = estadoEliminar.eliminando,
+                errorEliminar = estadoEliminar.error,
+                onEliminarCuenta = eliminarVm::eliminar,
+                onLimpiarErrorEliminar = eliminarVm::limpiarError,
                 onVolver = { navController.popBackStack() }
             )
         }

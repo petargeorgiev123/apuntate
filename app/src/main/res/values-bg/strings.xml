@@ -102,6 +102,15 @@
     <string name="perfil_quitar_foto">Премахни снимката</string>
     <string name="perfil_foto_local">Снимката се запазва само на това устройство.</string>
 
+    <!-- Изтриване на профил -->
+    <string name="eliminar_cuenta">Изтрий профила</string>
+    <string name="eliminar_cuenta_titulo">Да изтрием ли профила ти?</string>
+    <string name="eliminar_cuenta_aviso">Профилът ти ще бъде изтрит завинаги. Ще напуснеш всички свои групи и съобщенията ти ще бъдат изтрити. Минали разходи ще се запазят като «Usuario eliminado», за да не се променят сметките на групата. Това действие не може да бъде отменено.</string>
+    <string name="eliminar_cuenta_password">Потвърди паролата си</string>
+    <string name="eliminar_cuenta_confirmar">Изтрий завинаги</string>
+    <string name="eliminar_cuenta_err_password">Въведи паролата си.</string>
+    <string name="eliminar_cuenta_err_credenciales">Грешна парола.</string>
+
     <!-- Известия -->
     <string name="notif_canal_nombre">Чат съобщения</string>
     <string name="notif_canal_desc">Известия за нови съобщения в твоите групи</string>

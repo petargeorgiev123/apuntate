@@ -45,9 +45,16 @@ service cloud.firestore {
         // Crear mensaje: debe ser miembro y el autor debe ser él mismo.
         allow create: if esMiembroDelGrupoPadre()
           && request.resource.data.autorUid == request.auth.uid;
-        // Los mensajes no se editan; borrar solo el propio autor.
+        // Los mensajes no se editan. Borrar: su autor, o el último miembro del grupo
+        // (para poder eliminar el grupo completo sin dejar mensajes huérfanos).
         allow delete: if request.auth != null
-          && resource.data.autorUid == request.auth.uid;
+          && (
+            resource.data.autorUid == request.auth.uid
+            || (
+              esMiembroDelGrupoPadre()
+              && get(/databases/$(database)/documents/grupos/$(grupoId)).data.miembrosUids.size() == 1
+            )
+          );
       }
     }
   }

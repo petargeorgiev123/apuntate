@@ -1,7 +1,9 @@
-name: Compilar AAB firmado (Google Play)
+name: Compilar AAB (Google Play)
 
-# Se lanza manualmente desde la pestaña Actions. Requiere estos secretos del repositorio:
+# Se lanza manualmente desde la pestaña Actions.
+# Con estos secretos del repositorio genera un AAB FIRMADO, listo para subir a Play Console:
 #   KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
+# Sin ellos genera un AAB SIN FIRMAR, solo para validar que el build de release compila.
 on:
   workflow_dispatch:
 
@@ -25,19 +27,21 @@ jobs:
           fi
           chmod +x ./gradlew
 
-      - name: Restaurar keystore desde secreto
+      - name: Restaurar keystore (si existe el secreto)
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "Falta el secreto KEYSTORE_BASE64" >&2
-            exit 1
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+            echo "KEYSTORE_PATH=$RUNNER_TEMP/upload.keystore" >> "$GITHUB_ENV"
+            echo "FIRMADO=si" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No hay secreto KEYSTORE_BASE64: se generará un AAB SIN FIRMAR (solo validación)."
+            echo "FIRMADO=no" >> "$GITHUB_ENV"
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
 
       - name: Compilar AAB de release
         env:
-          KEYSTORE_PATH: ${{ runner.temp }}/upload.keystore
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -46,6 +50,6 @@ jobs:
       - name: Publicar el AAB como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: apuntate-release-aab
-          path: app/build/outputs/bundle/release/app-release.aab
+          name: ${{ env.FIRMADO == 'si' && 'apuntate-release-aab' || 'apuntate-aab-SIN-FIRMAR' }}
+          path: app/build/outputs/bundle/release/*.aab
           if-no-files-found: error

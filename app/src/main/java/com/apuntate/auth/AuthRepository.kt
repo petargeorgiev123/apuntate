@@ -1,5 +1,6 @@
 package com.apuntate.auth
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.awaitClose
@@ -66,6 +67,18 @@ class AuthRepository(
 
     fun cerrarSesion() {
         auth.signOut()
+    }
+
+    /** Vuelve a verificar la contraseña (Firebase lo exige antes de borrar la cuenta). */
+    suspend fun reautenticar(password: String) {
+        val user = auth.currentUser ?: throw IllegalStateException("Sin sesión")
+        val email = user.email ?: throw IllegalStateException("Sin email")
+        user.reauthenticate(EmailAuthProvider.getCredential(email, password)).await()
+    }
+
+    /** Elimina definitivamente la cuenta de Firebase Authentication del usuario actual. */
+    suspend fun borrarUsuario() {
+        auth.currentUser?.delete()?.await()
     }
 
     private fun FirebaseUser.toUsuarioActual() = UsuarioActual(

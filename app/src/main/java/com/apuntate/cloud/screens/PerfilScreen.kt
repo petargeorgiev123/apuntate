@@ -21,9 +21,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,9 +70,14 @@ fun PerfilScreen(
     nombreActual: String,
     email: String,
     onGuardarNombre: (String, onHecho: () -> Unit) -> Unit,
+    eliminando: Boolean,
+    errorEliminar: Int?,
+    onEliminarCuenta: (String) -> Unit,
+    onLimpiarErrorEliminar: () -> Unit,
     onVolver: () -> Unit
 ) {
     var nombre by remember { mutableStateOf(nombreActual) }
+    var dialogoEliminar by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
     val mensajeGuardado = stringResource(R.string.perfil_nombre_guardado)
     var idiomaSeleccionado by remember { mutableStateOf(LocaleManager.idiomaActual()) }
@@ -111,6 +124,7 @@ fun PerfilScreen(
             Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -174,7 +188,57 @@ fun PerfilScreen(
                     )
                 }
             }
+
+            // Eliminar cuenta
+            OutlinedButton(
+                onClick = { onLimpiarErrorEliminar(); dialogoEliminar = true },
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+            ) { Text(stringResource(R.string.eliminar_cuenta)) }
         }
+    }
+
+    if (dialogoEliminar) {
+        var password by remember { mutableStateOf("") }
+        AlertDialog(
+            onDismissRequest = { if (!eliminando) dialogoEliminar = false },
+            title = { Text(stringResource(R.string.eliminar_cuenta_titulo)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(stringResource(R.string.eliminar_cuenta_aviso))
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it; onLimpiarErrorEliminar() },
+                        label = { Text(stringResource(R.string.eliminar_cuenta_password)) },
+                        singleLine = true,
+                        enabled = !eliminando,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        isError = errorEliminar != null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    errorEliminar?.let {
+                        Text(
+                            stringResource(it),
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { onEliminarCuenta(password) },
+                    enabled = !eliminando,
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) { Text(stringResource(R.string.eliminar_cuenta_confirmar)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { dialogoEliminar = false }, enabled = !eliminando) {
+                    Text(stringResource(R.string.cancelar))
+                }
+            }
+        )
     }
 }
 

@@ -102,6 +102,15 @@
     <string name="perfil_quitar_foto">Quitar foto</string>
     <string name="perfil_foto_local">La foto se guarda solo en este dispositivo.</string>
 
+    <!-- Eliminar cuenta -->
+    <string name="eliminar_cuenta">Eliminar cuenta</string>
+    <string name="eliminar_cuenta_titulo">¿Eliminar tu cuenta?</string>
+    <string name="eliminar_cuenta_aviso">Tu cuenta se eliminará de forma permanente. Saldrás de todos tus grupos y se borrarán tus mensajes. Tus gastos pasados se conservarán como «Usuario eliminado» para no alterar las cuentas del grupo. Esta acción no se puede deshacer.</string>
+    <string name="eliminar_cuenta_password">Confirma tu contraseña</string>
+    <string name="eliminar_cuenta_confirmar">Eliminar definitivamente</string>
+    <string name="eliminar_cuenta_err_password">Introduce tu contraseña.</string>
+    <string name="eliminar_cuenta_err_credenciales">Contraseña incorrecta.</string>
+
     <!-- Notificaciones -->
     <string name="notif_canal_nombre">Mensajes de chat</string>
     <string name="notif_canal_desc">Avisos de mensajes nuevos en tus grupos</string>
