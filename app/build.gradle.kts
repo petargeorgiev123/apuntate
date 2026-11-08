@@ -7,20 +7,38 @@ plugins {
 
 android {
     namespace = "com.apuntate"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.apuntate"
         minSdk = 24
-        targetSdk = 35
+        // Google Play exige API 36 para apps nuevas (desde 31/08/2026).
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Firma de release: las credenciales llegan por variables de entorno (secretos de CI),
+    // nunca se guardan en el repositorio.
+    val keystorePath = System.getenv("KEYSTORE_PATH")
+    signingConfigs {
+        if (keystorePath != null) {
+            create("release") {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (keystorePath != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
