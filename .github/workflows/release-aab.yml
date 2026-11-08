@@ -1,9 +1,9 @@
 name: Compilar AAB (Google Play)
 
 # Se lanza manualmente desde la pestaña Actions.
-# Con estos secretos del repositorio genera un AAB FIRMADO, listo para subir a Play Console:
-#   KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
-# Sin ellos genera un AAB SIN FIRMAR, solo para validar que el build de release compila.
+# La clave de firma está cifrada en signing/upload.keystore.gpg. Con el secreto
+# SIGNING_PASSPHRASE del repositorio se descifra y se genera un AAB FIRMADO.
+# Sin ese secreto se genera un AAB SIN FIRMAR, solo para validar que el build compila.
 on:
   workflow_dispatch:
 
@@ -27,24 +27,25 @@ jobs:
           fi
           chmod +x ./gradlew
 
-      - name: Restaurar keystore (si existe el secreto)
+      - name: Descifrar keystore (si existe el secreto)
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+          if [ -n "$SIGNING_PASSPHRASE" ]; then
+            printf %s "$SIGNING_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
+              --passphrase-fd 0 -o "$RUNNER_TEMP/upload.keystore" -d signing/upload.keystore.gpg
             echo "KEYSTORE_PATH=$RUNNER_TEMP/upload.keystore" >> "$GITHUB_ENV"
             echo "FIRMADO=si" >> "$GITHUB_ENV"
           else
-            echo "::warning::No hay secreto KEYSTORE_BASE64: se generará un AAB SIN FIRMAR (solo validación)."
+            echo "::warning::No hay secreto SIGNING_PASSPHRASE: se generará un AAB SIN FIRMAR (solo validación)."
             echo "FIRMADO=no" >> "$GITHUB_ENV"
           fi
 
       - name: Compilar AAB de release
         env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_PASSPHRASE }}
+          KEY_ALIAS: upload
+          KEY_PASSWORD: ${{ secrets.SIGNING_PASSPHRASE }}
         run: ./gradlew bundleRelease --no-daemon
 
       - name: Publicar el AAB como artefacto
