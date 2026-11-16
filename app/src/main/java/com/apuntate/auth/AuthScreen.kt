@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.apuntate.R
+import com.apuntate.ui.EnlacesLegales
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel) {
@@ -160,6 +162,14 @@ fun AuthScreen(viewModel: AuthViewModel) {
             Text(
                 if (esRegistro) stringResource(R.string.auth_cambiar_a_login)
                 else stringResource(R.string.auth_cambiar_a_registro)
+            )
+        }
+
+        val context = LocalContext.current
+        TextButton(onClick = { EnlacesLegales.abrir(context, EnlacesLegales.POLITICA_PRIVACIDAD) }) {
+            Text(
+                stringResource(R.string.politica_privacidad),
+                style = MaterialTheme.typography.bodySmall
             )
         }
     }

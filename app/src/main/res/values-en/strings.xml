@@ -102,6 +102,8 @@
     <string name="perfil_quitar_foto">Remove photo</string>
     <string name="perfil_foto_local">The photo is saved only on this device.</string>
 
+    <string name="politica_privacidad">Privacy policy</string>
+
     <!-- Delete account -->
     <string name="eliminar_cuenta">Delete account</string>
     <string name="eliminar_cuenta_titulo">Delete your account?</string>

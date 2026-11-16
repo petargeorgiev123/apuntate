@@ -102,6 +102,8 @@
     <string name="perfil_quitar_foto">Премахни снимката</string>
     <string name="perfil_foto_local">Снимката се запазва само на това устройство.</string>
 
+    <string name="politica_privacidad">Политика за поверителност</string>
+
     <!-- Изтриване на профил -->
     <string name="eliminar_cuenta">Изтрий профила</string>
     <string name="eliminar_cuenta_titulo">Да изтрием ли профила ти?</string>

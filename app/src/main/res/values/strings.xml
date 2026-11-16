@@ -102,6 +102,8 @@
     <string name="perfil_quitar_foto">Quitar foto</string>
     <string name="perfil_foto_local">La foto se guarda solo en este dispositivo.</string>
 
+    <string name="politica_privacidad">Política de privacidad</string>
+
     <!-- Eliminar cuenta -->
     <string name="eliminar_cuenta">Eliminar cuenta</string>
     <string name="eliminar_cuenta_titulo">¿Eliminar tu cuenta?</string>

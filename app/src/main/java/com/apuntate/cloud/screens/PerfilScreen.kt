@@ -63,6 +63,7 @@ import com.apuntate.R
 import com.apuntate.i18n.Idioma
 import com.apuntate.i18n.LocaleManager
 import com.apuntate.perfil.FotoPerfilStore
+import com.apuntate.ui.EnlacesLegales
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,6 +189,12 @@ fun PerfilScreen(
                     )
                 }
             }
+
+            // Política de privacidad (Google Play exige enlazarla dentro de la app)
+            TextButton(
+                onClick = { EnlacesLegales.abrir(context, EnlacesLegales.POLITICA_PRIVACIDAD) },
+                modifier = Modifier.padding(top = 8.dp)
+            ) { Text(stringResource(R.string.politica_privacidad)) }
 
             // Eliminar cuenta
             OutlinedButton(
