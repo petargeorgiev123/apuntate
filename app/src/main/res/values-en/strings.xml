@@ -41,8 +41,9 @@
     <string name="miembros_plural">%1$d members</string>
     <string name="unido_ok">You\'ve joined the group!</string>
     <string name="codigo_no_existe">There is no group with that code.</string>
-    <string name="error_crear_grupo">Couldn\'t create the group. Check your connection.</string>
-    <string name="error_unirse_grupo">Couldn\'t join the group. Check your connection.</string>
+    <string name="error_crear_grupo">Couldn\'t create the group. Please try again.</string>
+    <string name="error_unirse_grupo">Couldn\'t join the group. Please try again.</string>
+    <string name="error_sin_conexion">No connection. Check your internet and try again.</string>
 
     <!-- Common -->
     <string name="aceptar">OK</string>

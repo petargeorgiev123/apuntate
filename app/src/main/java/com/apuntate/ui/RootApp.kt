@@ -12,6 +12,8 @@ import com.apuntate.auth.AuthScreen
 import com.apuntate.auth.AuthViewModel
 import com.apuntate.cloud.CloudRepository
 import com.apuntate.notif.MensajesObserver
+import android.util.Log
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,7 +42,11 @@ fun RootApp(
                 context = context.applicationContext,
                 repo = cloudRepo,
                 uid = u.uid,
-                scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+                // El manejador evita que un error inesperado en las notificaciones cierre la app.
+                scope = CoroutineScope(
+                    SupervisorJob() + Dispatchers.Main +
+                        CoroutineExceptionHandler { _, e -> Log.e("Apuntate", "Notificaciones", e) }
+                )
             )
         }
         DisposableEffect(u.uid) {

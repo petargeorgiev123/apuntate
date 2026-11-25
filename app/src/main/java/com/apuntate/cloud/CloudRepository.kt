@@ -1,8 +1,10 @@
 package com.apuntate.cloud
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +22,15 @@ class CloudRepository(
 
     private val grupos = db.collection("grupos")
 
+    /** invitaciones/{codigo} -> { grupoId }. Se lee por id para unirse con un código. */
+    private val invitaciones = db.collection("invitaciones")
+
     companion object {
         /** Nombre que sustituye al de un usuario que ha eliminado su cuenta. */
         const val ETIQUETA_USUARIO_ELIMINADO = "Usuario eliminado"
+
+        /** Formato de los códigos de invitación (evita rutas inválidas con lo que escriba el usuario). */
+        private val CODIGO_VALIDO = Regex("^[A-Z0-9]{4,12}$")
     }
 
     // ---------------- Grupos ----------------
@@ -71,24 +79,49 @@ class CloudRepository(
             "creadoEn" to FieldValue.serverTimestamp()
         )
         doc.set(datos).await()
+        // Registrar el código de invitación. Si falla, se reintenta al abrir la app (asegurarInvitacion).
+        try {
+            invitaciones.document(grupo.codigoInvitacion).set(mapOf("grupoId" to doc.id)).await()
+        } catch (e: Exception) {
+            Log.w("Apuntate", "No se pudo registrar la invitación: ${e.message}")
+        }
         return doc.id
     }
 
-    /** Une al usuario al grupo cuyo código coincide. Devuelve el id del grupo o null si no existe. */
+    /**
+     * Garantiza que el código de invitación del grupo está registrado en `invitaciones`.
+     * Necesario para los grupos creados antes de existir esta colección.
+     */
+    suspend fun asegurarInvitacion(grupo: GrupoCloud) {
+        if (!CODIGO_VALIDO.matches(grupo.codigoInvitacion)) return
+        val ref = invitaciones.document(grupo.codigoInvitacion)
+        if (!ref.get().await().exists()) {
+            ref.set(mapOf("grupoId" to grupo.id)).await()
+        }
+    }
+
+    /**
+     * Une al usuario al grupo cuyo código coincide. Devuelve el id del grupo, o null si el
+     * código no existe. Lanza excepción en otros errores (p. ej. sin conexión).
+     */
     suspend fun unirseConCodigo(codigo: String, uid: String, nombreUsuario: String): String? {
-        val resultado = grupos
-            .whereEqualTo("codigoInvitacion", codigo.trim().uppercase())
-            .limit(1)
-            .get()
-            .await()
-        val doc = resultado.documents.firstOrNull() ?: return null
-        doc.reference.update(
-            mapOf(
-                "miembrosUids" to FieldValue.arrayUnion(uid),
-                "miembros.$uid" to nombreUsuario
-            )
-        ).await()
-        return doc.id
+        val limpio = codigo.trim().uppercase()
+        if (!CODIGO_VALIDO.matches(limpio)) return null
+        val invitacion = invitaciones.document(limpio).get().await()
+        val grupoId = invitacion.getString("grupoId") ?: return null
+        try {
+            grupos.document(grupoId).update(
+                mapOf(
+                    "miembrosUids" to FieldValue.arrayUnion(uid),
+                    "miembros.$uid" to nombreUsuario
+                )
+            ).await()
+        } catch (e: FirebaseFirestoreException) {
+            // El grupo ya no existe (se borró): se trata como código inexistente.
+            if (e.code == FirebaseFirestoreException.Code.NOT_FOUND) return null
+            throw e
+        }
+        return grupoId
     }
 
     /** Sale del grupo. Si era el último miembro, borra el grupo. */

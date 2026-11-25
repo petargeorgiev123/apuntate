@@ -2,6 +2,7 @@ package com.apuntate.notif
 
 import android.content.Context
 import com.apuntate.cloud.CloudRepository
+import com.apuntate.cloud.sinCaidas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -33,7 +34,7 @@ class MensajesObserver(
     fun iniciar() {
         Notificaciones.crearCanal(context)
         jobGrupos = scope.launch {
-            repo.observarMisGrupos(uid).collectLatest { grupos ->
+            repo.observarMisGrupos(uid).sinCaidas("notif-grupos").collectLatest { grupos ->
                 val idsActuales = grupos.map { it.id }.toSet()
                 // Cancelar observadores de grupos a los que ya no pertenezco.
                 (jobsPorGrupo.keys - idsActuales).forEach { id ->
@@ -44,7 +45,8 @@ class MensajesObserver(
                 grupos.forEach { grupo ->
                     if (jobsPorGrupo.containsKey(grupo.id)) return@forEach
                     jobsPorGrupo[grupo.id] = scope.launch {
-                        repo.observarMensajes(grupo.id).collectLatest { mensajes ->
+                        // Reintenta si el servidor aún no ha guardado un grupo recién creado.
+                        repo.observarMensajes(grupo.id).sinCaidas("notif-mensajes").collectLatest { mensajes ->
                             val ultimo = mensajes.lastOrNull() ?: return@collectLatest
                             val visto = ultimoIdPorGrupo[grupo.id]
                             // La primera vez solo registramos, sin notificar.

@@ -71,6 +71,7 @@ fun GruposCloudScreen(
     val textoCodigoNoExiste = stringResource(R.string.codigo_no_existe)
     val textoErrorCrear = stringResource(R.string.error_crear_grupo)
     val textoErrorUnirse = stringResource(R.string.error_unirse_grupo)
+    val textoSinConexion = stringResource(R.string.error_sin_conexion)
 
     LaunchedEffect(resultado) {
         val r = resultado ?: return@LaunchedEffect
@@ -79,6 +80,7 @@ fun GruposCloudScreen(
             com.apuntate.cloud.ResultadoGrupo.CODIGO_NO_EXISTE -> textoCodigoNoExiste
             com.apuntate.cloud.ResultadoGrupo.ERROR_CREAR -> textoErrorCrear
             com.apuntate.cloud.ResultadoGrupo.ERROR_UNIRSE -> textoErrorUnirse
+            com.apuntate.cloud.ResultadoGrupo.SIN_CONEXION -> textoSinConexion
         }
         snackbar.showSnackbar(texto)
         viewModel.limpiarResultado()

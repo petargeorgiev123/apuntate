@@ -41,8 +41,9 @@
     <string name="miembros_plural">%1$d участници</string>
     <string name="unido_ok">Присъедини се към групата!</string>
     <string name="codigo_no_existe">Няма група с този код.</string>
-    <string name="error_crear_grupo">Групата не можа да се създаде. Провери връзката си.</string>
-    <string name="error_unirse_grupo">Неуспешно присъединяване към групата. Провери връзката си.</string>
+    <string name="error_crear_grupo">Групата не можа да се създаде. Опитай отново.</string>
+    <string name="error_unirse_grupo">Неуспешно присъединяване към групата. Опитай отново.</string>
+    <string name="error_sin_conexion">Няма връзка. Провери интернета си и опитай отново.</string>
 
     <!-- Общи -->
     <string name="aceptar">ОК</string>

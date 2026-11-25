@@ -2,6 +2,19 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Invitaciones: invitaciones/{codigo} -> { grupoId }.
+    // Conocer el código es lo que da acceso: se lee por id, pero no se pueden listar.
+    match /invitaciones/{codigo} {
+      allow get: if request.auth != null;
+      allow list: if false;
+      // Solo un miembro del grupo puede registrar su código, y debe ser el código real del grupo.
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['grupoId'])
+        && get(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId)).data.codigoInvitacion == codigo
+        && request.auth.uid in get(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId)).data.miembrosUids;
+      allow update, delete: if false;
+    }
+
     // Grupos: solo accesibles por usuarios autenticados.
     match /grupos/{grupoId} {
 

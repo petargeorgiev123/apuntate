@@ -26,9 +26,9 @@ class DetalleGrupoCloudViewModel(
 ) : ViewModel() {
 
     val uiState: StateFlow<DetalleGrupoCloudUiState> = combine(
-        repo.observarGrupo(grupoId),
-        repo.observarGastos(grupoId),
-        repo.observarMensajes(grupoId)
+        repo.observarGrupo(grupoId).sinCaidas("grupo"),
+        repo.observarGastos(grupoId).sinCaidas("gastos"),
+        repo.observarMensajes(grupoId).sinCaidas("mensajes")
     ) { grupo, gastos, mensajes ->
         DetalleGrupoCloudUiState(
             grupo = grupo,
@@ -57,26 +57,36 @@ class DetalleGrupoCloudViewModel(
         participantesUids: List<String>
     ) {
         if (concepto.isBlank() || importeCentimos <= 0 || participantesUids.isEmpty()) return
-        viewModelScope.launch {
+        seguro("añadirGasto") {
             repo.añadirGasto(grupoId, concepto, importeCentimos, pagadoPorUid, pagadoPorNombre, participantesUids)
         }
     }
 
     fun eliminarGasto(gastoId: String) {
-        viewModelScope.launch { repo.eliminarGasto(grupoId, gastoId) }
+        seguro("eliminarGasto") { repo.eliminarGasto(grupoId, gastoId) }
     }
 
     fun enviarMensaje(texto: String) {
         if (texto.isBlank()) return
-        viewModelScope.launch {
-            repo.enviarMensaje(grupoId, texto, uid, nombreUsuario)
-        }
+        seguro("enviarMensaje") { repo.enviarMensaje(grupoId, texto, uid, nombreUsuario) }
     }
 
     fun salirDelGrupo(onHecho: () -> Unit) {
-        viewModelScope.launch {
+        seguro("salirDelGrupo") {
             repo.salirDelGrupo(grupoId, uid)
             onHecho()
+        }
+    }
+
+    /** Ejecuta una operación de Firestore sin que un error pueda cerrar la app. */
+    private fun seguro(etiqueta: String, bloque: suspend () -> Unit) {
+        viewModelScope.launch {
+            try {
+                bloque()
+            } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                android.util.Log.w("Apuntate", "$etiqueta: ${e.message}")
+            }
         }
     }
 
