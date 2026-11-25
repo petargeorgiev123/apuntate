@@ -64,6 +64,7 @@ import com.apuntate.i18n.Idioma
 import com.apuntate.i18n.LocaleManager
 import com.apuntate.perfil.FotoPerfilStore
 import com.apuntate.ui.EnlacesLegales
+import com.apuntate.ui.VersionApp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -202,6 +203,8 @@ fun PerfilScreen(
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
                 modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
             ) { Text(stringResource(R.string.eliminar_cuenta)) }
+
+            VersionApp(Modifier.align(Alignment.CenterHorizontally))
         }
     }
 

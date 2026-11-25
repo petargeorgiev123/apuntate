@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.apuntate.R
 import com.apuntate.ui.EnlacesLegales
+import com.apuntate.ui.VersionApp
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel) {
@@ -172,5 +173,6 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 style = MaterialTheme.typography.bodySmall
             )
         }
+        VersionApp()
     }
 }
