@@ -42,7 +42,10 @@ fun ApuntateApp(
 
     NavHost(navController = navController, startDestination = Rutas.GRUPOS) {
         composable(Rutas.GRUPOS) {
+            // La clave incluye el nombre: si cambia (p. ej. llega justo tras registrarse),
+            // se crea un ViewModel nuevo en vez de seguir usando el nombre antiguo.
             val vm: GruposCloudViewModel = viewModel(
+                key = "grupos-$uid-$nombreUsuario",
                 factory = GruposCloudViewModel.Factory(cloudRepo, uid, nombreUsuario)
             )
             GruposCloudScreen(
@@ -56,6 +59,7 @@ fun ApuntateApp(
         composable(Rutas.DETALLE) { backStackEntry ->
             val grupoId = backStackEntry.arguments?.getString("grupoId") ?: return@composable
             val vm: DetalleGrupoCloudViewModel = viewModel(
+                key = "detalle-$grupoId-$uid-$nombreUsuario",
                 factory = DetalleGrupoCloudViewModel.Factory(cloudRepo, grupoId, uid, nombreUsuario)
             )
             DetalleGrupoCloudScreen(

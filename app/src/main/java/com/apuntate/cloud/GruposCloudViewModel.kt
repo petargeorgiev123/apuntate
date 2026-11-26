@@ -51,6 +51,12 @@ class GruposCloudViewModel(
                     } catch (e: Exception) {
                         Log.w("Apuntate", "asegurarInvitacion(${grupo.id}): ${e.message}")
                     }
+                    // Corrige el nombre guardado en cada grupo (p. ej. si quedó la parte del email).
+                    try {
+                        repo.sincronizarMiNombre(grupo.id, uid, nombreUsuario)
+                    } catch (e: Exception) {
+                        Log.w("Apuntate", "sincronizarMiNombre(${grupo.id}): ${e.message}")
+                    }
                 }
             } catch (e: Exception) {
                 Log.w("Apuntate", "Migración de invitaciones: ${e.message}")

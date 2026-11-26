@@ -14,8 +14,8 @@ android {
         minSdk = 24
         // Google Play exige API 36 para apps nuevas (desde 31/08/2026).
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.1"
+        versionCode = 5
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

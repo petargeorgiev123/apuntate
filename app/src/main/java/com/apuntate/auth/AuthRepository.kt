@@ -5,7 +5,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
 /** Usuario autenticado simplificado para la capa de UI. */
@@ -23,13 +27,26 @@ class AuthRepository(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
 
-    /** Emite el usuario actual (o null) cada vez que cambia el estado de autenticación. */
-    val usuario: Flow<UsuarioActual?> = callbackFlow {
-        val listener = FirebaseAuth.AuthStateListener { fb ->
-            trySend(fb.currentUser?.toUsuarioActual())
-        }
+    /** Se incrementa cuando cambian datos del perfil (p. ej. el nombre) sin cambiar la sesión. */
+    private val refrescos = MutableStateFlow(0)
+
+    private val cambiosDeSesion: Flow<Unit> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener { trySend(Unit) }
         auth.addAuthStateListener(listener)
         awaitClose { auth.removeAuthStateListener(listener) }
+    }
+
+    /**
+     * Emite el usuario actual (o null) cuando cambia la sesión Y cuando cambia su perfil.
+     * Firebase no avisa de los cambios de perfil: sin esto, tras registrarse la app se quedaba
+     * con el nombre vacío (y mostraba la parte del email) hasta reiniciarla.
+     */
+    val usuario: Flow<UsuarioActual?> = combine(cambiosDeSesion, refrescos) { _, _ ->
+        auth.currentUser?.toUsuarioActual()
+    }.distinctUntilChanged()
+
+    private fun notificarCambioPerfil() {
+        refrescos.update { it + 1 }
     }
 
     fun usuarioActual(): UsuarioActual? = auth.currentUser?.toUsuarioActual()
@@ -44,6 +61,7 @@ class AuthRepository(
             user.updateProfile(cambios).await()
             // Recargamos para que el nombre quede disponible de inmediato.
             user.reload().await()
+            notificarCambioPerfil()
         }
     }
 
@@ -63,6 +81,7 @@ class AuthRepository(
             .build()
         user.updateProfile(cambios).await()
         user.reload().await()
+        notificarCambioPerfil()
     }
 
     fun cerrarSesion() {
